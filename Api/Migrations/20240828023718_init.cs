@@ -17,10 +17,10 @@ namespace Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
@@ -34,7 +34,7 @@ namespace Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -50,27 +50,27 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Commment",
+                name: "Comment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     PostId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Commment", x => x.Id);
+                    table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Commment_Post_PostId",
+                        name: "FK_Comment_Post_PostId",
                         column: x => x.PostId,
                         principalTable: "Post",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Commment_Users_UserId",
+                        name: "FK_Comment_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -103,13 +103,13 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Commment_PostId",
-                table: "Commment",
+                name: "IX_Comment_PostId",
+                table: "Comment",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Commment_UserId",
-                table: "Commment",
+                name: "IX_Comment_UserId",
+                table: "Comment",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -144,7 +144,7 @@ namespace Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Commment");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Likes");

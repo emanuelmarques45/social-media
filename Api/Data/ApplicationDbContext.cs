@@ -8,19 +8,21 @@ namespace Api.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Like> Likes { get; set; }
-        public DbSet<Comment> Commment { get; set; }
+        public DbSet<Comment> Comment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Adjust to avoid causing multiple delete paths
+
             modelBuilder.Entity<Like>()
-                .HasOne(u => u.User)
-                .WithMany(l => l.Likes)
+                .HasOne(l => l.User)
+                .WithMany(u => u.Likes)
                 .HasForeignKey(l => l.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Comment>()
-                .HasOne(u => u.User)
-                .WithMany(c => c.Comments)
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 

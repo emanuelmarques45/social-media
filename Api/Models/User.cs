@@ -9,17 +9,9 @@ namespace Api.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [StringLength(30, MinimumLength = 2)]
         public string Name { get; set; } = string.Empty;
-        [Required]
-        [StringLength(40, MinimumLength = 4)]
         public string Email { get; set; } = string.Empty;
-        [Required]
-        [StringLength(16)]
         public string Username { get; set; } = string.Empty;
-        [Required]
-        [StringLength(16)]
         public string Password { get; set; } = string.Empty;
         public DateTime CreatedAt { get; }
 

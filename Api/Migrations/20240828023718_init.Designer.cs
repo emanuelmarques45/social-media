@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240823005352_init")]
+    [Migration("20240828023718_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -35,7 +35,8 @@ namespace Api.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -54,7 +55,7 @@ namespace Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Commment");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Api.Models.Like", b =>
@@ -95,7 +96,8 @@ namespace Api.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -127,23 +129,19 @@ namespace Api.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
