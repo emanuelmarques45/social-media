@@ -5,7 +5,7 @@ namespace Api.Models
 {
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(Username), IsUnique = true)]
-    public class User
+    public class UserModel
     {
         [Key]
         public int Id { get; set; }
@@ -13,11 +13,11 @@ namespace Api.Models
         public string Email { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; set; }
 
         //Navigation properties
-        public List<Post> Posts { get; set; } = [];
-        public List<Like> Likes { get; set; } = [];
-        public List<Comment> Comments { get; set; } = [];
+        public List<PostModel> Posts { get; set; } = [];
+        public List<LikeModel> Likes { get; set; } = [];
+        public List<CommentModel> Comments { get; set; } = [];
     }
 }

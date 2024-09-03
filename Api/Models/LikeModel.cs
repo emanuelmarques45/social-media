@@ -2,16 +2,16 @@
 
 namespace Api.Models
 {
-    public class Like
+    public class LikeModel
     {
         [Key]
         public int Id { get; set; }
         public int PostId { get; set; }
         public int UserId { get; set; }
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; set; }
 
         //Navigation properties
-        public Post Post { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public PostModel Post { get; set; } = null!;
+        public UserModel User { get; set; } = null!;
     }
 }

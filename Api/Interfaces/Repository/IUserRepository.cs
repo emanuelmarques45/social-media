@@ -5,10 +5,10 @@ namespace Api.Interfaces.Repository
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetAllAsync();
-        Task<User?> GetByIdAsync(int id);
-        Task<User> CreateAsync(User user);
-        Task<User?> UpdateAsync(int id, UpdateUserRequestDto userDto);
-        Task<User?> DeleteAsync(int id);
+        Task<UserModel> CreateAsync(UserModel user);
+        Task<List<UserModel>> GetAllAsync();
+        Task<UserModel?> GetByIdAsync(int id);
+        Task<UserModel?> UpdateAsync(int id, UpdateUserRequestDto userDto);
+        Task<UserModel?> DeleteAsync(int id);
     }
 }

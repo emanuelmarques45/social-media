@@ -5,7 +5,7 @@ namespace Api.Mappers
 {
     public static class UserMapper
     {
-        public static GetUserResponseDto ToGetUserResponseDto(this User user)
+        public static GetUserResponseDto ToGetUserResponseDto(this UserModel user)
         {
             return new GetUserResponseDto
             {
@@ -19,9 +19,9 @@ namespace Api.Mappers
             };
         }
 
-        public static User ToCreateUserRequestDto(this CreateUserRequestDto userRequestDto)
+        public static UserModel ToUserDto(this CreateUserRequestDto userRequestDto)
         {
-            return new User
+            return new UserModel
             {
                 Name = userRequestDto.Name,
                 Email = userRequestDto.Email,

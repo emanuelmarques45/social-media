@@ -8,7 +8,7 @@ namespace Api.Repository
 {
     public class UserRepository(ApplicationDbContext _context) : IUserRepository
     {
-        public async Task<User> CreateAsync(User user)
+        public async Task<UserModel> CreateAsync(UserModel user)
         {
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -16,56 +16,56 @@ namespace Api.Repository
             return user;
         }
 
-        public async Task<User?> DeleteAsync(int id)
+        public async Task<List<UserModel>> GetAllAsync()
         {
-            var user = await _context.Users.FindAsync(id);
+            return await _context.Users.ToListAsync();
+        }
 
-            if (user == null)
+        public async Task<UserModel?> GetByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
+
+        public async Task<UserModel?> UpdateAsync(int id, UpdateUserRequestDto userRequestDto)
+        {
+            var userDb = await GetByIdAsync(id);
+
+            if (userDb == null)
             {
                 return null;
             }
 
-            var associatedPosts = await _context.Post.Where(p => p.UserId == user.Id).ToListAsync();
-            var associatedLikes = await _context.Likes.Where(l => l.UserId == user.Id).ToListAsync();
-            var associatedComments = await _context.Comment.Where(c => c.UserId == user.Id).ToListAsync();
+            userDb.Name = userRequestDto.Name;
+            userDb.Email = userRequestDto.Email;
+            userDb.Username = userRequestDto.Username;
+
+            await _context.SaveChangesAsync();
+
+            return userDb;
+        }
+
+        public async Task<UserModel?> DeleteAsync(int id)
+        {
+            var userDb = await GetByIdAsync(id);
+
+            if (userDb == null)
+            {
+                return null;
+            }
+
+            var associatedPosts = await _context.Post.Where(p => p.UserId == userDb.Id).ToListAsync();
+            var associatedLikes = await _context.Likes.Where(l => l.UserId == userDb.Id).ToListAsync();
+            var associatedComments = await _context.Comment.Where(c => c.UserId == userDb.Id).ToListAsync();
 
             _context.Post.RemoveRange(associatedPosts);
             _context.Likes.RemoveRange(associatedLikes);
             _context.Comment.RemoveRange(associatedComments);
 
-            _context.Users.Remove(user);
+            _context.Users.Remove(userDb);
 
             await _context.SaveChangesAsync();
 
-            return user;
-        }
-
-        public Task<List<User>> GetAllAsync()
-        {
-            return _context.Users.ToListAsync();
-        }
-
-        public async Task<User?> GetByIdAsync(int id)
-        {
-            return await _context.Users.FindAsync(id);
-        }
-
-        public async Task<User?> UpdateAsync(int id, UpdateUserRequestDto userDto)
-        {
-            var user = await GetByIdAsync(id);
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            user.Name = userDto.Name;
-            user.Email = userDto.Email;
-            user.Username = userDto.Username;
-
-            await _context.SaveChangesAsync();
-
-            return user;
+            return userDb;
         }
     }
 }

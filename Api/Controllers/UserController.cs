@@ -1,5 +1,4 @@
-﻿using Api.Data;
-using Api.Dtos.User;
+﻿using Api.Dtos.User;
 using Api.Interfaces.Repository;
 using Api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -8,59 +7,57 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(ApplicationDbContext _context, IUserRepository _userRepo) : ControllerBase
+    public class UserController(IUserRepository _userRepo) : ControllerBase
     {
-
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetAll()
         {
-            var users = await _userRepo.GetAllAsync();
-            var usersDto = users.Select(u => u.ToGetUserResponseDto());
+            var users = (await _userRepo.GetAllAsync()).Select(u => u.ToGetUserResponseDto());
 
-            return Ok(usersDto);
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var user = await _userRepo.GetByIdAsync(id);
+            var userDb = await _userRepo.GetByIdAsync(id);
 
-            if (user == null)
+            if (userDb == null)
             {
                 return NotFound();
             }
 
-            return Ok(user.ToGetUserResponseDto());
+            return Ok(userDb.ToGetUserResponseDto());
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] CreateUserRequestDto userDto)
+        public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userRequestDto)
         {
-            var newUser = userDto.ToCreateUserRequestDto();
+            var newUser = userRequestDto.ToUserDto();
             await _userRepo.CreateAsync(newUser);
 
-            return CreatedAtAction(nameof(GetUser), new { newUser.Id }, newUser.ToGetUserResponseDto());
+            return CreatedAtAction(nameof(GetById), new { newUser.Id }, newUser.ToGetUserResponseDto());
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto)
         {
-            var user = await _userRepo.UpdateAsync(id, userDto);
+            var userDb = await _userRepo.UpdateAsync(id, userDto);
 
-            if (user == null)
+            if (userDb == null)
             {
                 return NotFound();
             }
 
-            return Ok(user.ToGetUserResponseDto());
+            return Ok(userDb.ToGetUserResponseDto());
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var user = await _userRepo.DeleteAsync(id);
+            var userDb = await _userRepo.DeleteAsync(id);
 
-            if (user == null)
+            if (userDb == null)
             {
                 return NotFound();
             }

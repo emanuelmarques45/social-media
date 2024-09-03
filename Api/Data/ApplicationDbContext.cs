@@ -5,22 +5,22 @@ namespace Api.Data
 {
     public class ApplicationDbContext(DbContextOptions dbContextOptions) : DbContext(dbContextOptions)
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Post> Post { get; set; }
-        public DbSet<Like> Likes { get; set; }
-        public DbSet<Comment> Comment { get; set; }
+        public DbSet<UserModel> Users { get; set; }
+        public DbSet<PostModel> Post { get; set; }
+        public DbSet<LikeModel> Likes { get; set; }
+        public DbSet<CommentModel> Comment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Adjust to avoid causing multiple delete paths
 
-            modelBuilder.Entity<Like>()
+            modelBuilder.Entity<LikeModel>()
                 .HasOne(l => l.User)
                 .WithMany(u => u.Likes)
                 .HasForeignKey(l => l.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Comment>()
+            modelBuilder.Entity<CommentModel>()
                 .HasOne(c => c.User)
                 .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
