@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Like\" />
     <Folder Include="Dtos\Comment\" />
   </ItemGroup>
 

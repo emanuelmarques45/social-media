@@ -9,6 +9,15 @@ namespace Api.Controllers
     [ApiController]
     public class PostController(IPostRepository _postRepo) : ControllerBase
     {
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postRequestDto)
+        {
+            var newPost = postRequestDto.ToPostDto();
+            await _postRepo.CreateAsync(newPost);
+
+            return CreatedAtAction(nameof(GetById), new { newPost.Id }, newPost.ToGetPostResponseDto());
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -28,15 +37,6 @@ namespace Api.Controllers
             }
 
             return Ok(postDb.ToGetPostResponseDto());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postRequestDto)
-        {
-            var newPost = postRequestDto.ToPostDto();
-            await _postRepo.CreateAsync(newPost);
-
-            return CreatedAtAction(nameof(GetById), new { newPost.Id }, newPost.ToGetPostResponseDto());
         }
 
         //[HttpPut("{id}")]

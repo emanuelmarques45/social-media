@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Dtos.Like;
+using Api.Models;
 
 namespace Api.Dtos.Post
 {
@@ -10,7 +11,7 @@ namespace Api.Dtos.Post
         public int UserId { get; set; }
 
         //Navigation properties
-        public List<LikeModel> Likes { get; set; } = [];
+        public List<GetLikeResponseDto> Likes { get; set; } = [];
         public List<CommentModel> Comments { get; set; } = [];
     }
 }

@@ -9,6 +9,15 @@ namespace Api.Controllers
     [ApiController]
     public class UserController(IUserRepository _userRepo) : ControllerBase
     {
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userRequestDto)
+        {
+            var newUser = userRequestDto.ToUserDto();
+            await _userRepo.CreateAsync(newUser);
+
+            return CreatedAtAction(nameof(GetById), new { newUser.Id }, newUser.ToGetUserResponseDto());
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -28,15 +37,6 @@ namespace Api.Controllers
             }
 
             return Ok(userDb.ToGetUserResponseDto());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userRequestDto)
-        {
-            var newUser = userRequestDto.ToUserDto();
-            await _userRepo.CreateAsync(newUser);
-
-            return CreatedAtAction(nameof(GetById), new { newUser.Id }, newUser.ToGetUserResponseDto());
         }
 
         [HttpPut("{id}")]

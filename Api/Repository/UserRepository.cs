@@ -18,12 +18,12 @@ namespace Api.Repository
 
         public async Task<List<UserModel>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Posts).ThenInclude(p => p.Likes).ToListAsync();
         }
 
         public async Task<UserModel?> GetByIdAsync(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.Include(u => u.Posts).FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<UserModel?> UpdateAsync(int id, UpdateUserRequestDto userRequestDto)

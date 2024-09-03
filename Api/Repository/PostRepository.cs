@@ -18,7 +18,7 @@ namespace Api.Repository
 
         public async Task<List<PostModel>> GetAllAsync()
         {
-            return await _context.Post.ToListAsync();
+            return await _context.Post.Include(p => p.Likes).ToListAsync();
         }
 
         public async Task<PostModel?> GetByIdAsync(int id)

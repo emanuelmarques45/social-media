@@ -13,9 +13,9 @@ namespace Api.Mappers
                 Name = user.Name,
                 Email = user.Email,
                 Username = user.Username,
-                Posts = user.Posts,
-                Likes = user.Likes,
-                Comments = user.Comments
+                Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
+                Likes = user.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
+                //Comments = user.Comments
             };
         }
 

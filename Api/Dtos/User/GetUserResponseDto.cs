@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using Api.Dtos.Like;
+using Api.Dtos.Post;
 
 namespace Api.Dtos.User
 {
@@ -10,8 +11,8 @@ namespace Api.Dtos.User
         public string Username { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
 
-        public List<PostModel> Posts { get; set; } = [];
-        public List<LikeModel> Likes { get; set; } = [];
-        public List<CommentModel> Comments { get; set; } = [];
+        public List<GetPostResponseDto> Posts { get; set; } = [];
+        public List<GetLikeResponseDto> Likes { get; set; } = [];
+        //public List<CommentModel> Comments { get; set; } = [];
     }
 }

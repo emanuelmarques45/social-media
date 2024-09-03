@@ -11,10 +11,10 @@ namespace Api.Mappers
             {
                 Id = post.Id,
                 Content = post.Content,
-                Likes = post.Likes,
-                Comments = post.Comments,
                 CreatedAt = post.CreatedAt,
-                UserId = post.UserId
+                UserId = post.UserId,
+                Likes = post.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
+                //Comments = post.Comments,
             };
         }
 
@@ -23,6 +23,7 @@ namespace Api.Mappers
             return new PostModel
             {
                 Content = postRequestDto.Content,
+                UserId = postRequestDto.UserId
             };
         }
     }

@@ -22,7 +22,7 @@ namespace Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Api.Models.Comment", b =>
+            modelBuilder.Entity("Api.Models.CommentModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace Api.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("Api.Models.Like", b =>
+            modelBuilder.Entity("Api.Models.LikeModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace Api.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("Api.Models.Post", b =>
+            modelBuilder.Entity("Api.Models.PostModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,7 +111,7 @@ namespace Api.Migrations
                     b.ToTable("Post");
                 });
 
-            modelBuilder.Entity("Api.Models.User", b =>
+            modelBuilder.Entity("Api.Models.UserModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,15 +151,15 @@ namespace Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.Models.Comment", b =>
+            modelBuilder.Entity("Api.Models.CommentModel", b =>
                 {
-                    b.HasOne("Api.Models.Post", "Post")
+                    b.HasOne("Api.Models.PostModel", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Models.User", "User")
+                    b.HasOne("Api.Models.UserModel", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -170,15 +170,15 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Models.Like", b =>
+            modelBuilder.Entity("Api.Models.LikeModel", b =>
                 {
-                    b.HasOne("Api.Models.Post", "Post")
+                    b.HasOne("Api.Models.PostModel", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Models.User", "User")
+                    b.HasOne("Api.Models.UserModel", "User")
                         .WithMany("Likes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -189,9 +189,9 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Models.Post", b =>
+            modelBuilder.Entity("Api.Models.PostModel", b =>
                 {
-                    b.HasOne("Api.Models.User", "User")
+                    b.HasOne("Api.Models.UserModel", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -200,14 +200,14 @@ namespace Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Api.Models.Post", b =>
+            modelBuilder.Entity("Api.Models.PostModel", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Likes");
                 });
 
-            modelBuilder.Entity("Api.Models.User", b =>
+            modelBuilder.Entity("Api.Models.UserModel", b =>
                 {
                     b.Navigation("Comments");
 
