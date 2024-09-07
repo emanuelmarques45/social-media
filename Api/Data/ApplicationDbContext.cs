@@ -25,19 +25,6 @@ namespace Api.Data
                 .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach (var property in entityType.ClrType.GetProperties())
-                {
-                    if (property.Name == "CreatedAt" && property.PropertyType == typeof(DateTime))
-                    {
-                        modelBuilder.Entity(entityType.ClrType)
-                            .Property<DateTime>(property.Name)
-                            .HasDefaultValueSql("GETDATE()");
-                    }
-                }
-            }
         }
     }
 }

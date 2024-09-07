@@ -14,16 +14,16 @@ namespace Api.Mappers
                 CreatedAt = post.CreatedAt,
                 UserId = post.UserId,
                 Likes = post.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
-                //Comments = post.Comments,
+                Comments = post.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
             };
         }
 
-        public static PostModel ToPostDto(this CreatePostRequestDto postRequestDto)
+        public static PostModel ToPostDto(this CreatePostRequestDto postDto)
         {
             return new PostModel
             {
-                Content = postRequestDto.Content,
-                UserId = postRequestDto.UserId
+                Content = postDto.Content,
+                UserId = postDto.UserId,
             };
         }
     }

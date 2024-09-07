@@ -8,7 +8,7 @@ namespace Api.Models
         public int Id { get; set; }
         public int PostId { get; set; }
         public int UserId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //Navigation properties
         public PostModel Post { get; set; } = null!;

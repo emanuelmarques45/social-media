@@ -1,5 +1,5 @@
-﻿using Api.Dtos.Like;
-using Api.Models;
+﻿using Api.Dtos.Comment;
+using Api.Dtos.Like;
 
 namespace Api.Dtos.Post
 {
@@ -12,6 +12,6 @@ namespace Api.Dtos.Post
 
         //Navigation properties
         public List<GetLikeResponseDto> Likes { get; set; } = [];
-        public List<CommentModel> Comments { get; set; } = [];
+        public List<GetCommentResponseDto> Comments { get; set; } = [];
     }
 }

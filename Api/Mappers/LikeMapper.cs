@@ -15,5 +15,14 @@ namespace Api.Mappers
                 CreatedAt = like.CreatedAt
             };
         }
+
+        public static LikeModel ToLikeDto(this CreateLikeRequestDto likeDto)
+        {
+            return new LikeModel
+            {
+                PostId = likeDto.PostId,
+                UserId = likeDto.UserId
+            };
+        }
     }
 }

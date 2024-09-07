@@ -6,10 +6,8 @@ namespace Api.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [StringLength(200, MinimumLength = 1)]
         public string Content { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int UserId { get; set; }
 
         //Navigation properties

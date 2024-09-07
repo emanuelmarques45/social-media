@@ -10,9 +10,9 @@ namespace Api.Controllers
     public class PostController(IPostRepository _postRepo) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postRequestDto)
+        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postDto)
         {
-            var newPost = postRequestDto.ToPostDto();
+            var newPost = postDto.ToPostDto();
             await _postRepo.CreateAsync(newPost);
 
             return CreatedAtAction(nameof(GetById), new { newPost.Id }, newPost.ToGetPostResponseDto());
@@ -21,13 +21,15 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var posts = (await _postRepo.GetAllAsync()).Select(p => p.ToGetPostResponseDto());
+            var posts = await _postRepo.GetAllAsync();
 
-            return Ok(posts);
+            var postsDto = posts.Select(p => p.ToGetPostResponseDto()).ToList();
+
+            return Ok(postsDto);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var postDb = await _postRepo.GetByIdAsync(id);
 
@@ -39,14 +41,30 @@ namespace Api.Controllers
             return Ok(postDb.ToGetPostResponseDto());
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(int id, [FromBody] string value)
-        //{
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostRequestDto postDto)
+        {
+            var postDb = await _postRepo.UpdateAsync(id, postDto);
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //}
+            if (postDb == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(postDb.ToGetPostResponseDto());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var postDb = await _postRepo.DeleteAsync(id);
+
+            if (postDb == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }

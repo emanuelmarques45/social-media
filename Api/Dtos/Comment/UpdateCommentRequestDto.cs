@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Post
+namespace Api.Dtos.Comment
 {
-    public class UpdatePostRequestDto
+    public class UpdateCommentRequestDto
     {
-        [StringLength(280, MinimumLength = 1)]
+        [StringLength(200, MinimumLength = 1)]
         public string Content { get; set; } = string.Empty;
     }
 }

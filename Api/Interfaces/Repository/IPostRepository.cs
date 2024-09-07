@@ -1,5 +1,4 @@
-﻿//using Api.Dtos.Post;
-using Api.Dtos.Post;
+﻿using Api.Dtos.Post;
 using Api.Models;
 
 namespace Api.Interfaces.Repository

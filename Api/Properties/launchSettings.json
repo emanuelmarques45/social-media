@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -13,8 +13,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://0.0.0.0:80",
+      "launchUrl": "http://localhost/swagger",
+      "applicationUrl": "http://0.0.0.0",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -23,8 +23,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://0.0.0.0:80",
+      "launchUrl": "https://localhost/swagger",
+      "applicationUrl": "https://0.0.0.0",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

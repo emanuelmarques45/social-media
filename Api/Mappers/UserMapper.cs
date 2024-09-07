@@ -13,20 +13,21 @@ namespace Api.Mappers
                 Name = user.Name,
                 Email = user.Email,
                 Username = user.Username,
+                CreatedAt = user.CreatedAt,
                 Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
                 Likes = user.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
-                //Comments = user.Comments
+                Comments = user.Comments.Select(c => c.ToGetCommentResponseDto()).ToList()
             };
         }
 
-        public static UserModel ToUserDto(this CreateUserRequestDto userRequestDto)
+        public static UserModel ToUserDto(this CreateUserRequestDto userDto)
         {
             return new UserModel
             {
-                Name = userRequestDto.Name,
-                Email = userRequestDto.Email,
-                Username = userRequestDto.Username,
-                Password = userRequestDto.Password
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Username = userDto.Username,
+                Password = userDto.Password
             };
         }
     }

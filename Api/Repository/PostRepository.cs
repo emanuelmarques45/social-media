@@ -18,17 +18,28 @@ namespace Api.Repository
 
         public async Task<List<PostModel>> GetAllAsync()
         {
-            return await _context.Post.Include(p => p.Likes).ToListAsync();
+            return await _context.Post.Include(p => p.Likes).Include(p => p.Comments).ToListAsync();
         }
 
         public async Task<PostModel?> GetByIdAsync(int id)
         {
-            return await _context.Post.FindAsync(id);
+            return await _context.Post.Include(p => p.Likes).Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task<PostModel?> UpdateAsync(int id, UpdatePostRequestDto userDto)
+        public async Task<PostModel?> UpdateAsync(int id, UpdatePostRequestDto postDto)
         {
-            throw new NotImplementedException();
+            var postDb = await GetByIdAsync(id);
+
+            if (postDb == null)
+            {
+                return null;
+            }
+
+            postDb.Content = postDto.Content;
+
+            await _context.SaveChangesAsync();
+
+            return postDb;
         }
 
         public async Task<PostModel?> DeleteAsync(int id)
@@ -41,6 +52,8 @@ namespace Api.Repository
             }
 
             _context.Post.Remove(post);
+
+            await _context.SaveChangesAsync();
 
             return post;
         }
