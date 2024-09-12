@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.User
+namespace Api.Dtos.Account
 {
     public class UpdateUserRequestDto
     {
@@ -9,7 +9,7 @@ namespace Api.Dtos.User
         [StringLength(40, MinimumLength = 4)]
         public string Email { get; set; } = string.Empty;
         [StringLength(16, MinimumLength = 5)]
-        public string Username { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
         [StringLength(16, MinimumLength = 8)]
         public string Password { get; set; } = string.Empty;
     }

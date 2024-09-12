@@ -1,11 +1,9 @@
 ﻿namespace Api.Helpers.Query
 {
-    public class UserQuery
+    public class UserQuery : Query
     {
         public string? Name { get; set; }
         public string? Email { get; set; }
-        public string? Username { get; set; }
-        public string? SortBy { get; set; }
-        public bool IsDescending { get; set; }
+        public string? UserName { get; set; }
     }
 }

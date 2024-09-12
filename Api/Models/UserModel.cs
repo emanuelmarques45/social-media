@@ -1,17 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Models
 {
     [Index(nameof(Email), IsUnique = true)]
-    [Index(nameof(Username), IsUnique = true)]
-    public class UserModel
+    public class UserModel : IdentityUser<int>
     {
-        [Key]
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
+        public override string Email { get; set; } = string.Empty;
+        public override string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

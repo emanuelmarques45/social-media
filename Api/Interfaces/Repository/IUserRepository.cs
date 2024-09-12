@@ -1,4 +1,4 @@
-﻿using Api.Dtos.User;
+﻿using Api.Dtos.Account;
 using Api.Helpers.Query;
 using Api.Models;
 

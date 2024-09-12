@@ -12,7 +12,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentDto)
         {
-            var newComment = commentDto.ToCommentDto();
+            var newComment = commentDto.ToCommentModel();
             await _commentRepo.CreateAsync(newComment);
 
             return CreatedAtAction(nameof(GetById), new { newComment.Id }, newComment.ToGetCommentResponseDto());

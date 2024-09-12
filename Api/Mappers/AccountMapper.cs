@@ -1,18 +1,19 @@
-﻿using Api.Dtos.User;
+﻿using Api.Dtos.Account;
 using Api.Models;
 
 namespace Api.Mappers
 {
-    public static class UserMapper
+    public static class AccountMapper
     {
-        public static GetUserResponseDto ToGetUserResponseDto(this UserModel user)
+        public static AccountResponseDto ToAccountResponseDto(this UserModel user)
         {
-            return new GetUserResponseDto
+            return new AccountResponseDto
             {
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Username = user.Username,
+                EmailConfirmed = user.EmailConfirmed,
+                UserName = user.UserName,
                 CreatedAt = user.CreatedAt,
                 Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
                 Likes = user.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
@@ -20,14 +21,14 @@ namespace Api.Mappers
             };
         }
 
-        public static UserModel ToUserDto(this CreateUserRequestDto userDto)
+        public static UserModel ToUserModel(this RegisterRequestDto registerDto)
         {
             return new UserModel
             {
-                Name = userDto.Name,
-                Email = userDto.Email,
-                Username = userDto.Username,
-                Password = userDto.Password
+                Name = registerDto.Name,
+                Email = registerDto.Email,
+                UserName = registerDto.UserName,
+                Password = registerDto.Password
             };
         }
     }

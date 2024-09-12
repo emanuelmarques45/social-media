@@ -12,7 +12,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postDto)
         {
-            var newPost = postDto.ToPostDto();
+            var newPost = postDto.ToPostModel();
             await _postRepo.CreateAsync(newPost);
 
             return CreatedAtAction(nameof(GetById), new { newPost.Id }, newPost.ToGetPostResponseDto());

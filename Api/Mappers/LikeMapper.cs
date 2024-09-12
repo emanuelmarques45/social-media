@@ -16,7 +16,7 @@ namespace Api.Mappers
             };
         }
 
-        public static LikeModel ToLikeDto(this CreateLikeRequestDto likeDto)
+        public static LikeModel ToLikeModelDto(this CreateLikeRequestDto likeDto)
         {
             return new LikeModel
             {

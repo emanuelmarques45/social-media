@@ -18,7 +18,7 @@ namespace Api.Mappers
             };
         }
 
-        public static PostModel ToPostDto(this CreatePostRequestDto postDto)
+        public static PostModel ToPostModel(this CreatePostRequestDto postDto)
         {
             return new PostModel
             {

@@ -17,7 +17,7 @@ namespace Api.Mappers
             };
         }
 
-        public static CommentModel ToCommentDto(this CreateCommentRequestDto commentDto)
+        public static CommentModel ToCommentModel(this CreateCommentRequestDto commentDto)
         {
             return new CommentModel
             {
