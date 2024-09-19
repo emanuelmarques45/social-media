@@ -1,11 +1,10 @@
-﻿using Api.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.Api.Models;
 
-namespace Api.Data
+namespace SocialMedia.Api.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : IdentityDbContext<UserModel, IdentityRole<int>, int>(dbContextOptions)
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : IdentityDbContext<UserModel>(dbContextOptions)
     {
         public DbSet<PostModel> Post { get; set; }
         public DbSet<LikeModel> Likes { get; set; }

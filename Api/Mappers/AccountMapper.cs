@@ -1,11 +1,11 @@
-﻿using Api.Dtos.Account;
-using Api.Models;
+﻿using SocialMedia.Api.Dtos.Account;
+using SocialMedia.Api.Models;
 
-namespace Api.Mappers
+namespace SocialMedia.Api.Mappers
 {
     public static class AccountMapper
     {
-        public static AccountResponseDto ToAccountResponseDto(this UserModel user)
+        public static AccountResponseDto ToGetAccountResponseDto(this UserModel user)
         {
             return new AccountResponseDto
             {
@@ -21,6 +21,27 @@ namespace Api.Mappers
             };
         }
 
+        public static RelatedAccountResponseDto ToGetRelatedAccountResponseDto(this UserModel user)
+        {
+            return new RelatedAccountResponseDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                UserName = user.UserName,
+            };
+        }
+
+        public static AuthResponseDto ToAuthResponseDto(this UserModel user, string token)
+        {
+            return new AuthResponseDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                UserName = user.UserName,
+                Token = token
+            };
+        }
+
         public static UserModel ToUserModel(this RegisterRequestDto registerDto)
         {
             return new UserModel
@@ -28,7 +49,6 @@ namespace Api.Mappers
                 Name = registerDto.Name,
                 Email = registerDto.Email,
                 UserName = registerDto.UserName,
-                Password = registerDto.Password
             };
         }
     }

@@ -1,12 +1,12 @@
-﻿using Api.Dtos.Comment;
-using Api.Dtos.Like;
-using Api.Dtos.Post;
+﻿using SocialMedia.Api.Dtos.Comment;
+using SocialMedia.Api.Dtos.Like;
+using SocialMedia.Api.Dtos.Post;
 
-namespace Api.Dtos.Account
+namespace SocialMedia.Api.Dtos.Account
 {
     public class AccountResponseDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Account
+namespace SocialMedia.Api.Dtos.Account
 {
     public class UpdateUserRequestDto
     {

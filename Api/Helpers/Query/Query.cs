@@ -1,4 +1,4 @@
-﻿namespace Api.Helpers.Query
+﻿namespace SocialMedia.Api.Helpers.Query
 {
     public abstract class Query
     {

@@ -19,7 +19,7 @@
 
 //        public async Task<List<UserModel>> GetAllAsync(UserQuery query)
 //        {
-//            var users = _context.Users.Include(u => u.Posts).Include(u => u.Likes).Include(u => u.Comments).AsQueryable();
+//var users = _context.Users.Include(u => u.Posts).Include(u => u.Likes).Include(u => u.Comments).AsQueryable();
 
 //            if (!string.IsNullOrEmpty(query.Name))
 //            {
