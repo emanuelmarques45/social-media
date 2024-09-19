@@ -1,7 +1,7 @@
-﻿using Api.Dtos.Comment;
-using Api.Models;
+﻿using SocialMedia.Api.Dtos.Comment;
+using SocialMedia.Api.Models;
 
-namespace Api.Interfaces.Repository
+namespace SocialMedia.Api.Interfaces.Repository
 {
     public interface ICommentRepository
     {

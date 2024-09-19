@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Comment
+namespace SocialMedia.Api.Dtos.Comment
 {
     public class CreateCommentRequestDto
     {
@@ -10,6 +10,6 @@ namespace Api.Dtos.Comment
         [Required]
         public int PostId { get; set; }
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }

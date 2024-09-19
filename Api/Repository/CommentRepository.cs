@@ -1,11 +1,11 @@
-﻿using Api.Data;
-using Api.Dtos.Comment;
-using Api.Interfaces.Repository;
-using Api.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.Api.Data;
+using SocialMedia.Api.Dtos.Comment;
+using SocialMedia.Api.Interfaces.Repository;
+using SocialMedia.Api.Models;
 
-namespace Api.Repository
+namespace SocialMedia.Api.Repository
 {
     public class CommentRepository(ApplicationDbContext _context) : ICommentRepository
     {

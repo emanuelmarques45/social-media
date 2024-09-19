@@ -1,12 +1,14 @@
-﻿using Api.Dtos.Comment;
-using Api.Interfaces.Repository;
-using Api.Mappers;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Api.Dtos.Comment;
+using SocialMedia.Api.Interfaces.Repository;
+using SocialMedia.Api.Mappers;
 
-namespace Api.Controllers
+namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommentController(ICommentRepository _commentRepo) : ControllerBase
     {
         [HttpPost]

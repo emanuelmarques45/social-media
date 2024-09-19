@@ -5,13 +5,13 @@ Accept: application/json
 
 ###
 
-POST {{SocialMedia_HostAddress}}/api/user
+POST {{SocialMedia_HostAddress}}/api/account/register
 Content-Type: application/json
 
 {
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "UserName": "john.doe",
+  "name": "Emanuil",
+  "email": "emanuil@example.com",
+  "UserName": "emanuill",
   "password": "john1234"
 }
 
@@ -19,3 +19,15 @@ Content-Type: application/json
 
 GET {{SocialMedia_HostAddress}}/api/post
 Accept: application/json
+
+###
+
+POST {{SocialMedia_HostAddress}}/api/account/login
+Content-Type: application/json
+
+{
+  "email": "emanuel@gmail.com",
+  "UserName": "emanuel.marques",
+  "password": "emanuel123"
+}
+

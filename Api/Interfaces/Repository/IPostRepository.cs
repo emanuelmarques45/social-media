@@ -1,14 +1,13 @@
-﻿using Api.Dtos.Post;
-using Api.Models;
+﻿using SocialMedia.Api.Models;
 
-namespace Api.Interfaces.Repository
+namespace SocialMedia.Api.Interfaces.Repository
 {
     public interface IPostRepository
     {
-        Task<PostModel> CreateAsync(PostModel Post);
-        Task<List<PostModel>> GetAllAsync();
-        Task<PostModel?> GetByIdAsync(int id);
-        Task<PostModel?> UpdateAsync(int id, UpdatePostRequestDto userDto);
-        Task<PostModel?> DeleteAsync(int id);
+        Task<PostModel> Create(PostModel postToCreate);
+        Task<List<PostModel>> GetAll();
+        Task<PostModel?> GetById(int id);
+        Task<PostModel?> Update(PostModel postToUpdate);
+        Task<PostModel?> Delete(int postId);
     }
 }

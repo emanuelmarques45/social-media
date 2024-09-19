@@ -1,27 +1,32 @@
-﻿using Api.Dtos.Post;
-using Api.Interfaces.Repository;
-using Api.Mappers;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Api.Dtos.Post;
+using SocialMedia.Api.Interfaces.Services;
+using SocialMedia.Api.Mappers;
 
-namespace Api.Controllers
+namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController(IPostRepository _postRepo) : ControllerBase
+    [Authorize]
+    public class PostController(IPostService _postService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postDto)
+        public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
         {
-            var newPost = postDto.ToPostModel();
-            await _postRepo.CreateAsync(newPost);
+            var createdPost = await _postService.Create(postToCreate);
 
-            return CreatedAtAction(nameof(GetById), new { newPost.Id }, newPost.ToGetPostResponseDto());
+            return CreatedAtAction(
+                nameof(GetById),
+                new { createdPost.Id },
+                createdPost.ToGetPostResponseDto()
+            );
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var posts = await _postRepo.GetAllAsync();
+            var posts = await _postService.GetAll();
 
             var postsDto = posts.Select(p => p.ToGetPostResponseDto()).ToList();
 
@@ -31,33 +36,33 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var postDb = await _postRepo.GetByIdAsync(id);
+            var post = await _postService.GetById(id);
 
-            if (postDb == null)
+            if (post == null)
             {
                 return NotFound();
             }
 
-            return Ok(postDb.ToGetPostResponseDto());
+            return Ok(post.ToGetPostResponseDto());
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostRequestDto postDto)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdatePostRequestDto postDto)
         {
-            var postDb = await _postRepo.UpdateAsync(id, postDto);
+            var updatedPost = await _postService.Update(postDto);
 
-            if (postDb == null)
+            if (updatedPost == null)
             {
                 return NotFound();
             }
 
-            return Ok(postDb.ToGetPostResponseDto());
+            return Ok(updatedPost.ToGetPostResponseDto());
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        /*[HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var postDb = await _postRepo.DeleteAsync(id);
+            var postDb = await _postService.Delete(id);
 
             if (postDb == null)
             {
@@ -65,6 +70,6 @@ namespace Api.Controllers
             }
 
             return NoContent();
-        }
+        }*/
     }
 }

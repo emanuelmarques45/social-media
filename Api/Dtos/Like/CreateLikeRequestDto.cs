@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Like
+namespace SocialMedia.Api.Dtos.Like
 {
     public class CreateLikeRequestDto
     {
         [Required]
         public int PostId { get; set; }
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }

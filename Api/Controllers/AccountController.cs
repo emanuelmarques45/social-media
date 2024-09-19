@@ -13,7 +13,7 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin")]
-    public class AccountController(UserManager<UserModel> _userManager, SignInManager<UserModel> _signInManager, TokenService _tokenService) : ControllerBase
+    public class AccountController(UserManager<UserModel> _userManager, SignInManager<UserModel> _signInManager, AuthService _tokenService) : ControllerBase
     {
         [HttpPost("register")]
         [AllowAnonymous]
@@ -147,7 +147,7 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<IActionResult> Update([FromRoute] string userId, [FromBody] UpdateUserRequestDto userDto)
+        public async Task<IActionResult> Update([FromRoute] string userId, [FromBody] UpdateAccountRequestDto userDto)
         {
             var userDb = await _userManager.FindByIdAsync(userId);
 

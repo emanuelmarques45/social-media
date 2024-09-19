@@ -1,7 +1,7 @@
-﻿using Api.Dtos.Like;
-using Api.Models;
+﻿using SocialMedia.Api.Dtos.Like;
+using SocialMedia.Api.Models;
 
-namespace Api.Mappers
+namespace SocialMedia.Api.Mappers
 {
     public static class LikeMapper
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Dtos.Comment
+namespace SocialMedia.Api.Dtos.Comment
 {
     public class UpdateCommentRequestDto
     {

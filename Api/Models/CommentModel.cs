@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models
+namespace SocialMedia.Api.Models
 {
     public class CommentModel
     {
@@ -9,7 +9,7 @@ namespace Api.Models
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int PostId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         //Navigation properties
         public PostModel Post { get; set; } = null!;

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models
+namespace SocialMedia.Api.Models
 {
     public class LikeModel
     {
         [Key]
         public int Id { get; set; }
         public int PostId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         //Navigation properties
