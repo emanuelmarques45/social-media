@@ -1,4 +1,5 @@
-﻿using SocialMedia.Api.Dtos.Post;
+﻿using Microsoft.AspNetCore.Identity;
+using SocialMedia.Api.Dtos.Post;
 using SocialMedia.Api.Interfaces.Repository;
 using SocialMedia.Api.Interfaces.Services;
 using SocialMedia.Api.Mappers;
@@ -6,10 +7,17 @@ using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Services
 {
-    public class PostService(IPostRepository _postRepo) : IPostService
+    public class PostService(IPostRepository _postRepo, UserManager<UserModel> _userManager) : IPostService
     {
-        public async Task<PostModel> Create(CreatePostRequestDto postToCreate)
+        public async Task<PostModel?> Create(CreatePostRequestDto postToCreate)
         {
+            //var userDb = await _userManager.FindByIdAsync(postToCreate.UserId);
+
+            //if (userDb == null)
+            //{
+            //    return null;
+            //}
+
             var createdPost = await _postRepo.Create(postToCreate.ToPostModel());
 
             return createdPost;
@@ -34,19 +42,25 @@ namespace SocialMedia.Api.Services
                 return null;
             }
 
-            if (!string.IsNullOrWhiteSpace(postToUpdate.Content))
-            {
-                postDb.Content = postToUpdate.Content;
-            }
+            postDb.Content = postToUpdate.Content;
 
             var updatedPost = await _postRepo.Update(postDb);
 
             return updatedPost;
         }
 
-        public Task<PostModel> Delete(CreatePostRequestDto postToDelete)
+        public async Task<PostModel?> Delete(int id)
         {
-            throw new NotImplementedException();
+            var postDb = await GetById(id);
+
+            if (postDb == null)
+            {
+                return null;
+            }
+
+            var deletedPost = await _postRepo.Delete(postDb);
+
+            return deletedPost;
         }
     }
 }

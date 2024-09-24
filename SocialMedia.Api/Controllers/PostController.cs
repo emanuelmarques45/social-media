@@ -11,10 +11,17 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class PostController(IPostService _postService) : ControllerBase
     {
+        private string postNotFoundMsg = "The post was not found!";
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
         {
             var createdPost = await _postService.Create(postToCreate);
+
+            if (createdPost == null)
+            {
+                return NotFound();
+            }
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -40,36 +47,36 @@ namespace SocialMedia.Api.Controllers
 
             if (post == null)
             {
-                return NotFound();
+                return NotFound(postNotFoundMsg);
             }
 
             return Ok(post.ToGetPostResponseDto());
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdatePostRequestDto postDto)
+        public async Task<IActionResult> Update([FromBody] UpdatePostRequestDto postToUpdate)
         {
-            var updatedPost = await _postService.Update(postDto);
+            var updatedPost = await _postService.Update(postToUpdate);
 
             if (updatedPost == null)
             {
-                return NotFound();
+                return NotFound(postNotFoundMsg);
             }
 
             return Ok(updatedPost.ToGetPostResponseDto());
         }
 
-        /*[HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var postDb = await _postService.Delete(id);
+            var deletedPost = await _postService.Delete(id);
 
-            if (postDb == null)
+            if (deletedPost == null)
             {
-                return NotFound();
+                return NotFound(postNotFoundMsg);
             }
 
             return NoContent();
-        }*/
+        }
     }
 }
