@@ -5,9 +5,9 @@ namespace SocialMedia.Api.Mappers
 {
     public static class LikeMapper
     {
-        public static GetLikeResponseDto ToGetLikeResponseDto(this LikeModel like)
+        public static LikeResponseDto ToGetLikeResponseDto(this LikeModel like)
         {
-            return new GetLikeResponseDto
+            return new LikeResponseDto
             {
                 Id = like.Id,
                 PostId = like.PostId,

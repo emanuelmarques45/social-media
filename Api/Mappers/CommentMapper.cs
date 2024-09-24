@@ -5,9 +5,9 @@ namespace SocialMedia.Api.Mappers
 {
     public static class CommentMapper
     {
-        public static GetCommentResponseDto ToGetCommentResponseDto(this CommentModel comment)
+        public static CommentResponseDto ToGetCommentResponseDto(this CommentModel comment)
         {
-            return new GetCommentResponseDto
+            return new CommentResponseDto
             {
                 Id = comment.Id,
                 Content = comment.Content,

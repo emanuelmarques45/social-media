@@ -6,7 +6,7 @@ namespace SocialMedia.Api.Dtos.Post
     {
         [Required]
         public int Id { get; set; }
-        [StringLength(280)]
+        [StringLength(280, MinimumLength = 1)]
         public string Content { get; set; } = string.Empty;
     }
 }

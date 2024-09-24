@@ -1,14 +1,13 @@
-﻿using SocialMedia.Api.Dtos.Comment;
-using SocialMedia.Api.Models;
+﻿using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Interfaces.Repository
 {
     public interface ICommentRepository
     {
-        Task<CommentModel> CreateAsync(CommentModel comment);
-        Task<List<CommentModel>> GetAllAsync();
-        Task<CommentModel?> GetByIdAsync(int id);
-        Task<CommentModel?> UpdateAsync(int id, UpdateCommentRequestDto commentDto);
-        Task<CommentModel?> DeleteAsync(int id);
+        Task<CommentModel> Create(CommentModel commentToCreate);
+        Task<List<CommentModel>> GetAll();
+        Task<CommentModel?> GetById(int id);
+        Task<CommentModel> Update(CommentModel commentToUpdate);
+        Task<CommentModel> Delete(CommentModel commentToDelete);
     }
 }

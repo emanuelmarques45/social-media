@@ -4,7 +4,7 @@ using SocialMedia.Api.Dtos.Like;
 
 namespace SocialMedia.Api.Dtos.Post
 {
-    public class GetPostResponseDto
+    public class PostResponseDto
     {
         public int Id { get; set; }
         public string Content { get; set; } = string.Empty;
@@ -12,7 +12,7 @@ namespace SocialMedia.Api.Dtos.Post
 
         //Navigation properties
         public RelatedAccountResponseDto User { get; set; } = null!;
-        public List<GetLikeResponseDto> Likes { get; set; } = [];
-        public List<GetCommentResponseDto> Comments { get; set; } = [];
+        public List<LikeResponseDto> Likes { get; set; } = [];
+        public List<CommentResponseDto> Comments { get; set; } = [];
     }
 }

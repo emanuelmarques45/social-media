@@ -103,9 +103,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddRazorPages();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -138,7 +140,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.MapControllers().AllowAnonymous();
-    app.UseDeveloperExceptionPage();
 }
 
 app.Run();

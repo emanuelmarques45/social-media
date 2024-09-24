@@ -9,10 +9,10 @@ POST {{SocialMedia_HostAddress}}/api/account/register
 Content-Type: application/json
 
 {
-  "name": "Emanuil",
-  "email": "emanuil@example.com",
-  "UserName": "emanuill",
-  "password": "john1234"
+  "name": "Emanuel",
+  "email": "emanuell@gmail.com",
+  "UserName": "emanuelmarques",
+  "password": "emanuel123"
 }
 
 ###
@@ -30,4 +30,9 @@ Content-Type: application/json
   "UserName": "emanuel.marques",
   "password": "emanuel123"
 }
+
+###
+
+DELETE {{SocialMedia_HostAddress}}/api/account/113d3352-4e58-433c-b20f-8b4884167ff2
+
 

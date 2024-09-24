@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Api.Dtos.Account;
 using SocialMedia.Api.Helpers.Query;
+using SocialMedia.Api.Interfaces.Services;
 using SocialMedia.Api.Mappers;
 using SocialMedia.Api.Models;
-using SocialMedia.Api.Services;
 
 namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
-    public class AccountController(UserManager<UserModel> _userManager, SignInManager<UserModel> _signInManager, AuthService _tokenService) : ControllerBase
+    [Authorize]
+    public class AccountController(UserManager<UserModel> _userManager, SignInManager<UserModel> _signInManager, IAuthService _authService) : ControllerBase
     {
         [HttpPost("register")]
         [AllowAnonymous]
@@ -35,17 +35,17 @@ namespace SocialMedia.Api.Controllers
                 return StatusCode(500, createdRole.Errors);
             }
 
-            var addToRole = AddToRole(user.Id, "User");
-            var token = _tokenService.GenerateAccessToken(user);
+            var addToRole = AssignRole(user.Id, "User");
+            var token = await _authService.GenerateAccessToken(user);
             var response = user.ToAuthResponseDto(token);
 
             return CreatedAtAction(nameof(GetUserById), new { user.Id }, user.ToGetAccountResponseDto());
         }
 
-        [HttpPost("addRole")]
-        public async Task<IActionResult> AddToRole(string userId, string roleName)
+        [HttpPost("assign-role")]
+        public async Task<IActionResult> AssignRole(string id, string roleName)
         {
-            var userDb = await _userManager.FindByIdAsync(userId);
+            var userDb = await _userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
@@ -86,13 +86,14 @@ namespace SocialMedia.Api.Controllers
                 return Unauthorized("Username or password incorrects!");
             }
 
-            var token = _tokenService.GenerateAccessToken(userDb);
+            var token = await _authService.GenerateAccessToken(userDb);
             var response = userDb.ToAuthResponseDto(token);
 
             return Ok(response);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers([FromQuery] UserQuery query)
         {
             var users = _userManager.Users.Include(u => u.Posts).AsQueryable();
@@ -131,10 +132,10 @@ namespace SocialMedia.Api.Controllers
             return Ok(usersDto);
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById([FromRoute] string userId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById([FromRoute] string id)
         {
-            var user = await _userManager.Users.Include(u => u.Posts).FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.Include(u => u.Posts).FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
@@ -146,10 +147,10 @@ namespace SocialMedia.Api.Controllers
             return Ok(userDto);
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> Update([FromRoute] string userId, [FromBody] UpdateAccountRequestDto userDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateAccountRequestDto userDto)
         {
-            var userDb = await _userManager.FindByIdAsync(userId);
+            var userDb = await _userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
@@ -171,10 +172,11 @@ namespace SocialMedia.Api.Controllers
             return Ok(userDb.ToGetAccountResponseDto());
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> Delete([FromRoute] string userId)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var userDb = await _userManager.FindByIdAsync(userId);
+            var userDb = await _userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {

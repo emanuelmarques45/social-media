@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SocialMedia.Api.Data;
-using SocialMedia.Api.Dtos.Comment;
 using SocialMedia.Api.Interfaces.Repository;
 using SocialMedia.Api.Models;
 
@@ -9,54 +7,42 @@ namespace SocialMedia.Api.Repository
 {
     public class CommentRepository(ApplicationDbContext _context) : ICommentRepository
     {
-        public async Task<CommentModel> CreateAsync(CommentModel comment)
+        public async Task<CommentModel> Create(CommentModel commentToCreate)
         {
-            await _context.Comment.AddAsync(comment);
+            await _context.Comment.AddAsync(commentToCreate);
             await _context.SaveChangesAsync();
 
-            return comment;
+            return commentToCreate;
         }
 
-        public async Task<List<CommentModel>> GetAllAsync()
+        public async Task<List<CommentModel>> GetAll()
         {
-            return await _context.Comment.ToListAsync();
+            return await _context.Comment
+                .Include(c => c.User)
+                .ToListAsync();
         }
 
-        public async Task<CommentModel?> GetByIdAsync([FromRoute] int id)
+        public async Task<CommentModel?> GetById(int id)
         {
-            return await _context.Comment.FindAsync(id);
+            return await _context.Comment
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<CommentModel?> UpdateAsync([FromRoute] int id, UpdateCommentRequestDto commentDto)
+        public async Task<CommentModel> Update(CommentModel commentToUpdate)
         {
-            var commentDb = await GetByIdAsync(id);
-
-            if (commentDb == null)
-            {
-                return null;
-            }
-
-            commentDb.Content = commentDto.Content;
-
+            _context.Comment.Update(commentToUpdate);
             await _context.SaveChangesAsync();
 
-            return commentDb;
+            return commentToUpdate;
         }
 
-        public async Task<CommentModel?> DeleteAsync([FromRoute] int id)
+        public async Task<CommentModel> Delete(CommentModel commentToDelete)
         {
-            var commentDb = await GetByIdAsync(id);
-
-            if (commentDb == null)
-            {
-                return null;
-            }
-
-            _context.Comment.Remove(commentDb);
-
+            _context.Comment.Remove(commentToDelete);
             await _context.SaveChangesAsync();
 
-            return commentDb;
+            return commentToDelete;
         }
     }
 }

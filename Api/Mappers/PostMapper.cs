@@ -5,9 +5,9 @@ namespace SocialMedia.Api.Mappers
 {
     public static class PostMapper
     {
-        public static GetPostResponseDto ToGetPostResponseDto(this PostModel post)
+        public static PostResponseDto ToGetPostResponseDto(this PostModel post)
         {
-            return new GetPostResponseDto
+            return new PostResponseDto
             {
                 Id = post.Id,
                 Content = post.Content,

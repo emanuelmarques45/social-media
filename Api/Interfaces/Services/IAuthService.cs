@@ -4,6 +4,6 @@ namespace SocialMedia.Api.Interfaces.Services
 {
     public interface IAuthService
     {
-        public string GenerateAccessToken(UserModel user);
+        public Task<string> GenerateAccessToken(UserModel user);
     }
 }

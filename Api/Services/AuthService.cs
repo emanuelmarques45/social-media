@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using SocialMedia.Api.Interfaces.Services;
 using SocialMedia.Api.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,12 +8,13 @@ using System.Text;
 
 namespace SocialMedia.Api.Services
 {
-    public class AuthService(IConfiguration _config) : IAuthService
+    public class AuthService(IConfiguration _config, UserManager<UserModel> _userManager) : IAuthService
     {
         private SymmetricSecurityKey _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SignInKey"]));
 
-        public string GenerateAccessToken(UserModel user)
+        public async Task<string> GenerateAccessToken(UserModel user)
         {
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
             {
@@ -21,6 +23,7 @@ namespace SocialMedia.Api.Services
                 new(ClaimTypes.GivenName, user.UserName),
             };
 
+            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

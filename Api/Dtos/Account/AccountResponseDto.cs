@@ -13,8 +13,8 @@ namespace SocialMedia.Api.Dtos.Account
         public string UserName { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
 
-        public List<GetPostResponseDto> Posts { get; set; } = [];
-        public List<GetLikeResponseDto> Likes { get; set; } = [];
-        public List<GetCommentResponseDto> Comments { get; set; } = [];
+        public List<PostResponseDto> Posts { get; set; } = [];
+        public List<LikeResponseDto> Likes { get; set; } = [];
+        public List<CommentResponseDto> Comments { get; set; } = [];
     }
 }

@@ -17,7 +17,11 @@ namespace SocialMedia.Api.Repository
 
         public async Task<List<PostModel>> GetAll()
         {
-            return await _context.Post.Include(p => p.Likes).Include(p => p.Comments).ToListAsync();
+            return await _context.Post
+                .Include(p => p.Likes)
+                .Include(p => p.Comments)
+                .Include(p => p.User)
+                .ToListAsync();
         }
 
         public async Task<PostModel?> GetById(int id)
@@ -29,7 +33,7 @@ namespace SocialMedia.Api.Repository
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<PostModel?> Update(PostModel postToUpdate)
+        public async Task<PostModel> Update(PostModel postToUpdate)
         {
             _context.Post.Update(postToUpdate);
             await _context.SaveChangesAsync();
@@ -37,20 +41,12 @@ namespace SocialMedia.Api.Repository
             return postToUpdate;
         }
 
-        public async Task<PostModel?> Delete(int postId)
+        public async Task<PostModel> Delete(PostModel postToDelete)
         {
-            var post = await GetById(postId);
-
-            if (post == null)
-            {
-                return null;
-            }
-
-            _context.Post.Remove(post);
-
+            _context.Post.Remove(postToDelete);
             await _context.SaveChangesAsync();
 
-            return post;
+            return postToDelete;
         }
     }
 }

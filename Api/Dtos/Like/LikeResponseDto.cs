@@ -1,6 +1,6 @@
 ﻿namespace SocialMedia.Api.Dtos.Like
 {
-    public class GetLikeResponseDto
+    public class LikeResponseDto
     {
         public int Id { get; set; }
         public int PostId { get; set; }

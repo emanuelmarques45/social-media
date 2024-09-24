@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Api.Dtos.Comment;
-using SocialMedia.Api.Interfaces.Repository;
+using SocialMedia.Api.Interfaces.Services;
 using SocialMedia.Api.Mappers;
 
 namespace SocialMedia.Api.Controllers
@@ -9,21 +9,29 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CommentController(ICommentRepository _commentRepo) : ControllerBase
+    public class CommentController(ICommentService _commentService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentDto)
+        public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)
         {
-            var newComment = commentDto.ToCommentModel();
-            await _commentRepo.CreateAsync(newComment);
+            var createdComment = await _commentService.Create(commentToCreate);
 
-            return CreatedAtAction(nameof(GetById), new { newComment.Id }, newComment.ToGetCommentResponseDto());
+            if (createdComment == null)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { createdComment.Id },
+                createdComment.ToGetCommentResponseDto()
+            );
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var comments = await _commentRepo.GetAllAsync();
+            var comments = await _commentService.GetAll();
 
             var commentsDto = comments.Select(c => c.ToGetCommentResponseDto()).ToList();
 
@@ -33,7 +41,7 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var commentDb = await _commentRepo.GetByIdAsync(id);
+            var commentDb = await _commentService.GetById(id);
 
             if (commentDb == null)
             {
@@ -43,26 +51,25 @@ namespace SocialMedia.Api.Controllers
             return Ok(commentDb.ToGetCommentResponseDto());
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentDto)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentToUpdate)
         {
-            var commentDb = await _commentRepo.UpdateAsync(id, commentDto);
+            var updatedPost = await _commentService.Update(commentToUpdate);
 
-            if (commentDb == null)
+            if (updatedPost == null)
             {
                 return NotFound();
             }
 
-            return Ok(commentDb.ToGetCommentResponseDto());
+            return Ok(updatedPost.ToGetCommentResponseDto());
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var commentDb = await _commentRepo.DeleteAsync(id);
+            var deletedComment = await _commentService.Delete(id);
 
-            if (commentDb == null)
+            if (deletedComment == null)
             {
                 return NotFound();
             }

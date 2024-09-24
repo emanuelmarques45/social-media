@@ -7,7 +7,7 @@ namespace SocialMedia.Api.Interfaces.Repository
         Task<PostModel> Create(PostModel postToCreate);
         Task<List<PostModel>> GetAll();
         Task<PostModel?> GetById(int id);
-        Task<PostModel?> Update(PostModel postToUpdate);
-        Task<PostModel?> Delete(int postId);
+        Task<PostModel> Update(PostModel postToUpdate);
+        Task<PostModel> Delete(PostModel postToDelete);
     }
 }
