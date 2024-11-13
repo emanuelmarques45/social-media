@@ -19,6 +19,8 @@ namespace SocialMedia.Api.Repository
         {
             return await _context.Comment
                 .Include(c => c.User)
+                .Include(c => c.Replies)
+                .Where(c => c.ParentId == null)
                 .ToListAsync();
         }
 
@@ -26,6 +28,8 @@ namespace SocialMedia.Api.Repository
         {
             return await _context.Comment
                 .Include(c => c.User)
+                .Include(c => c.Replies)
+                .Where(c => c.ParentId == null)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

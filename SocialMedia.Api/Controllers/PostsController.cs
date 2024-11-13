@@ -9,7 +9,7 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PostController(IPostService _postService) : ControllerBase
+    public class PostsController(IPostService _postService) : ControllerBase
     {
         private string postNotFoundMsg = "The post was not found!";
 
@@ -20,7 +20,7 @@ namespace SocialMedia.Api.Controllers
 
             if (createdPost == null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
             return CreatedAtAction(

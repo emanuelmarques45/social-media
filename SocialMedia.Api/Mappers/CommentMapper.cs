@@ -13,7 +13,10 @@ namespace SocialMedia.Api.Mappers
                 Content = comment.Content,
                 CreatedAt = comment.CreatedAt,
                 PostId = comment.PostId,
-                UserId = comment.UserId
+                UserId = comment.UserId,
+                ParentId = comment.ParentId,
+                User = comment.User.ToGetRelatedAccountResponseDto(),
+                Replies = comment.Replies.Select(r => r.ToGetCommentResponseDto()).ToList()
             };
         }
 
@@ -23,7 +26,8 @@ namespace SocialMedia.Api.Mappers
             {
                 Content = commentDto.Content,
                 PostId = commentDto.PostId,
-                UserId = commentDto.UserId
+                UserId = commentDto.UserId,
+                ParentId = commentDto.ParentId
             };
         }
     }

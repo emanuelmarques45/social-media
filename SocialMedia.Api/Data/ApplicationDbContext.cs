@@ -27,11 +27,18 @@ namespace SocialMedia.Api.Data
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<CommentModel>()
+                .HasOne(c => c.Comment)
+                .WithMany(c => c.Replies)
+                .HasForeignKey(c => c.ParentId);
+
             modelBuilder.Entity<UserModel>()
                 .ToTable("Users")
                 .Ignore(u => u.TwoFactorEnabled)
                 .Ignore(u => u.PhoneNumberConfirmed)
                 .Ignore(u => u.LockoutEnabled);
+
+            //modelBuilder.Seed();
         }
     }
 }

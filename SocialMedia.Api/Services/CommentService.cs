@@ -7,13 +7,14 @@ using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Services
 {
-    public class CommentService(ICommentRepository _commentRepo, UserManager<UserModel> _userManager) : ICommentService
+    public class CommentService(ICommentRepository _commentRepo, UserManager<UserModel> _userManager, IPostRepository _postRepo) : ICommentService
     {
         public async Task<CommentModel?> Create(CreateCommentRequestDto commentToCreate)
         {
+            var postDb = await _postRepo.GetById(commentToCreate.PostId);
             var userDb = await _userManager.FindByIdAsync(commentToCreate.UserId);
 
-            if (userDb == null)
+            if (postDb == null || userDb == null)
             {
                 return null;
             }

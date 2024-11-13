@@ -18,18 +18,18 @@ namespace SocialMedia.Api.Repository
         public async Task<List<PostModel>> GetAll()
         {
             return await _context.Post
-                .Include(p => p.Likes)
-                .Include(p => p.Comments)
                 .Include(p => p.User)
+                .Include(p => p.Likes)
+                .Include(p => p.Comments.Where(c => c.ParentId == null))
                 .ToListAsync();
         }
 
         public async Task<PostModel?> GetById(int id)
         {
             return await _context.Post
-                .Include(p => p.Likes)
-                .Include(p => p.Comments)
                 .Include(p => p.User)
+                .Include(p => p.Likes)
+                .Include(p => p.Comments.Where(c => c.ParentId == null))
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 

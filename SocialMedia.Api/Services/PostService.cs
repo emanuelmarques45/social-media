@@ -11,12 +11,12 @@ namespace SocialMedia.Api.Services
     {
         public async Task<PostModel?> Create(CreatePostRequestDto postToCreate)
         {
-            //var userDb = await _userManager.FindByIdAsync(postToCreate.UserId);
+            var userDb = await _userManager.FindByIdAsync(postToCreate.UserId);
 
-            //if (userDb == null)
-            //{
-            //    return null;
-            //}
+            if (userDb == null)
+            {
+                return null;
+            }
 
             var createdPost = await _postRepo.Create(postToCreate.ToPostModel());
 

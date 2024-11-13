@@ -11,5 +11,6 @@ namespace SocialMedia.Api.Dtos.Comment
         public int PostId { get; set; }
         [Required]
         public string UserId { get; set; } = string.Empty;
+        public int? ParentId { get; set; }
     }
 }

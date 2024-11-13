@@ -109,6 +109,17 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddRazorPages();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins(
+                "http://127.0.0.1:5500",
+                "http://localhost:4200");
+        });
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -142,15 +153,7 @@ if (app.Environment.IsDevelopment())
     app.MapControllers().AllowAnonymous();
 }
 
+app.UseCors();
+
 app.Run();
 
-//app.UseCors();
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(
-//        policy =>
-//        {
-//            policy.WithOrigins("http://localhost:5173");
-//        });
-//});

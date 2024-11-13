@@ -12,8 +12,8 @@ using SocialMedia.Api.Data;
 namespace SocialMedia.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240920010651_init")]
-    partial class init
+    [Migration("20240925013558_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

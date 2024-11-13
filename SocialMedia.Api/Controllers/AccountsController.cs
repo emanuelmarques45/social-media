@@ -13,7 +13,11 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AccountController(UserManager<UserModel> _userManager, SignInManager<UserModel> _signInManager, IAuthService _authService) : ControllerBase
+    public class AccountsController(
+        UserManager<UserModel> _userManager,
+        SignInManager<UserModel> _signInManager,
+        IAuthService _authService,
+        RoleManager<IdentityRole> _roleManager) : ControllerBase
     {
         [HttpPost("register")]
         [AllowAnonymous]
@@ -35,7 +39,7 @@ namespace SocialMedia.Api.Controllers
                 return StatusCode(500, createdRole.Errors);
             }
 
-            var addToRole = AssignRole(user.Id, "User");
+            var addToRole = await AssignRole(user.Id, "User");
             var token = await _authService.GenerateAccessToken(user);
             var response = user.ToAuthResponseDto(token);
 
@@ -43,6 +47,7 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpPost("assign-role")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignRole(string id, string roleName)
         {
             var userDb = await _userManager.FindByIdAsync(id);
@@ -60,6 +65,20 @@ namespace SocialMedia.Api.Controllers
             }
 
             return Ok("Role added successfully!");
+        }
+
+        [HttpPost("create-role")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateRole(string roleName)
+        {
+            if (await _roleManager.RoleExistsAsync(roleName))
+            {
+                return StatusCode(409, "This role already exists!");
+            }
+
+            await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+            return Created();
         }
 
         [HttpPost("login")]
@@ -96,7 +115,10 @@ namespace SocialMedia.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers([FromQuery] UserQuery query)
         {
-            var users = _userManager.Users.Include(u => u.Posts).AsQueryable();
+            var users = _userManager.Users
+                    .Include(u => u.Posts)
+                    .Include(p => p.Comments.Where(c => c.ParentId == null))
+                    .AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Name))
             {
@@ -135,7 +157,10 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById([FromRoute] string id)
         {
-            var user = await _userManager.Users.Include(u => u.Posts).FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _userManager.Users
+                        .Include(u => u.Posts)
+                        .Include(p => p.Comments.Where(c => c.ParentId == null))
+                        .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
             {
