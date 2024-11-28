@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SocialMedia.Api.Models
+﻿namespace SocialMedia.Api.Models
 {
     public class LikeModel
     {
-        [Key]
         public int Id { get; set; }
         public int PostId { get; set; }
         public string UserId { get; set; } = string.Empty;

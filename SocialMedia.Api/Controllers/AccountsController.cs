@@ -14,10 +14,10 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     [Authorize]
     public class AccountsController(
-        UserManager<UserModel> _userManager,
-        SignInManager<UserModel> _signInManager,
-        IAuthService _authService,
-        RoleManager<IdentityRole> _roleManager) : ControllerBase
+        UserManager<UserModel> userManager,
+        SignInManager<UserModel> signInManager,
+        IAuthService authService,
+        RoleManager<IdentityRole> roleManager) : ControllerBase
     {
         [HttpPost("register")]
         [AllowAnonymous]
@@ -25,14 +25,14 @@ namespace SocialMedia.Api.Controllers
         {
             var user = registerDto.ToUserModel();
 
-            var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+            var createdUser = await userManager.CreateAsync(user, registerDto.Password);
 
             if (!createdUser.Succeeded)
             {
                 return StatusCode(500, createdUser.Errors);
             }
 
-            var createdRole = await _userManager.AddToRoleAsync(user, "user");
+            var createdRole = await userManager.AddToRoleAsync(user, "user");
 
             if (!createdRole.Succeeded)
             {
@@ -40,7 +40,7 @@ namespace SocialMedia.Api.Controllers
             }
 
             var addToRole = await AssignRole(user.Id, "User");
-            var token = await _authService.GenerateAccessToken(user);
+            var token = await authService.GenerateAccessToken(user);
             var response = user.ToAuthResponseDto(token);
 
             return CreatedAtAction(nameof(GetUserById), new { user.Id }, user.ToGetAccountResponseDto());
@@ -50,14 +50,14 @@ namespace SocialMedia.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignRole(string id, string roleName)
         {
-            var userDb = await _userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
                 return NotFound();
             }
 
-            var createdRole = await _userManager.AddToRoleAsync(userDb, roleName);
+            var createdRole = await userManager.AddToRoleAsync(userDb, roleName);
 
             if (!createdRole.Succeeded)
             {
@@ -71,12 +71,12 @@ namespace SocialMedia.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole(string roleName)
         {
-            if (await _roleManager.RoleExistsAsync(roleName))
+            if (await roleManager.RoleExistsAsync(roleName))
             {
                 return StatusCode(409, "This role already exists!");
             }
 
-            await _roleManager.CreateAsync(new IdentityRole(roleName));
+            await roleManager.CreateAsync(new IdentityRole(roleName));
 
             return Created();
         }
@@ -94,18 +94,18 @@ namespace SocialMedia.Api.Controllers
 
             if (!string.IsNullOrEmpty(loginDto.Email))
             {
-                userDb = await _userManager.FindByEmailAsync(loginDto.Email);
+                userDb = await userManager.FindByEmailAsync(loginDto.Email);
             } else if (!string.IsNullOrEmpty(loginDto.UserName))
             {
-                userDb = await _userManager.FindByNameAsync(loginDto.UserName);
+                userDb = await userManager.FindByNameAsync(loginDto.UserName);
             }
 
-            if (userDb == null || !(await _signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
+            if (userDb == null || !(await signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
             {
                 return Unauthorized("Username or password incorrects!");
             }
 
-            var token = await _authService.GenerateAccessToken(userDb);
+            var token = await authService.GenerateAccessToken(userDb);
             var response = userDb.ToAuthResponseDto(token);
 
             return Ok(response);
@@ -115,9 +115,7 @@ namespace SocialMedia.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsers([FromQuery] UserQuery query)
         {
-            var users = _userManager.Users
-                    .Include(u => u.Posts)
-                    .Include(p => p.Comments.Where(c => c.ParentId == null))
+            var users = userManager.Users
                     .AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Name))
@@ -157,9 +155,7 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById([FromRoute] string id)
         {
-            var user = await _userManager.Users
-                        .Include(u => u.Posts)
-                        .Include(p => p.Comments.Where(c => c.ParentId == null))
+            var user = await userManager.Users
                         .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
@@ -175,7 +171,7 @@ namespace SocialMedia.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateAccountRequestDto userDto)
         {
-            var userDb = await _userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
@@ -187,7 +183,7 @@ namespace SocialMedia.Api.Controllers
             userDb.UserName = userDto.UserName;
             userDb.PasswordHash = userDto.Password;
 
-            var updatedUser = await _userManager.UpdateAsync(userDb);
+            var updatedUser = await userManager.UpdateAsync(userDb);
 
             if (!updatedUser.Succeeded)
             {
@@ -201,14 +197,14 @@ namespace SocialMedia.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
-            var userDb = await _userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
                 return NotFound();
             }
 
-            var deletedUser = await _userManager.DeleteAsync(userDb);
+            var deletedUser = await userManager.DeleteAsync(userDb);
 
             if (!deletedUser.Succeeded)
             {

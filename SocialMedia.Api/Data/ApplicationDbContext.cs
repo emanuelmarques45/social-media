@@ -9,6 +9,7 @@ namespace SocialMedia.Api.Data
         public DbSet<PostModel> Post { get; set; }
         public DbSet<LikeModel> Likes { get; set; }
         public DbSet<CommentModel> Comment { get; set; }
+        public DbSet<ChildCommentModel> ChildComment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,10 +28,10 @@ namespace SocialMedia.Api.Data
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<CommentModel>()
-                .HasOne(c => c.Comment)
-                .WithMany(c => c.Replies)
-                .HasForeignKey(c => c.ParentId);
+            //modelBuilder.Entity<CommentModel>()
+            //    .HasOne(c => c.Comment)
+            //    .WithMany(c => c.Replies)
+            //    .HasForeignKey(c => c.ParentId);
 
             modelBuilder.Entity<UserModel>()
                 .ToTable("Users")
