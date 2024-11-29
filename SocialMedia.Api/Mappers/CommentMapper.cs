@@ -14,6 +14,7 @@ namespace SocialMedia.Api.Mappers
                 CreatedAt = comment.CreatedAt,
                 PostId = comment.PostId,
                 User = comment.User.ToGetRelatedAccountResponseDto(),
+                Replies = comment.Replies
             };
         }
 

@@ -18,12 +18,16 @@ namespace SocialMedia.Api.Repository
         public async Task<List<CommentModel>> GetAll()
         {
             return await context.Comment
+                .Include(c => c.User)
+                .Include(c => c.Replies)
                 .ToListAsync();
         }
 
         public async Task<CommentModel?> GetById(int id)
         {
             return await context.Comment
+                .Include(c => c.User)
+                .Include(c => c.Replies)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

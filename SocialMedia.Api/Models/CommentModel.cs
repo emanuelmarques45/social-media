@@ -11,5 +11,6 @@
         //Navigation properties
         public PostModel Post { get; set; } = null!;
         public UserModel User { get; set; } = null!;
+        public List<ChildCommentModel> Replies { get; set; } = [];
     }
 }

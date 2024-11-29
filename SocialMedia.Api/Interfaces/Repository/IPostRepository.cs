@@ -2,12 +2,7 @@
 
 namespace SocialMedia.Api.Interfaces.Repository
 {
-    public interface IPostRepository
+    public interface IPostRepository : IDefaultRepository<PostModel>
     {
-        Task<PostModel> Create(PostModel postToCreate);
-        Task<List<PostModel>> GetAll();
-        Task<PostModel?> GetById(int id);
-        Task<PostModel> Update(PostModel postToUpdate);
-        Task<PostModel> Delete(PostModel postToDelete);
     }
 }

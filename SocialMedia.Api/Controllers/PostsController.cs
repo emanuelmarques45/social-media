@@ -11,7 +11,7 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class PostsController(IPostService _postService) : ControllerBase
     {
-        private string postNotFoundMsg = "The post was not found!";
+        private readonly string postNotFoundMsg = "The post was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)

@@ -11,7 +11,7 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class CommentsController(ICommentService _commentService) : ControllerBase
     {
-        private string commentNotFoundMsg = "The comment was not found!";
+        private readonly string commentNotFoundMsg = "The comment was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)

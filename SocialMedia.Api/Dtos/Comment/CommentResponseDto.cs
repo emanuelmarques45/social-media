@@ -1,4 +1,5 @@
 ﻿using SocialMedia.Api.Dtos.Account;
+using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Dtos.Comment
 {
@@ -9,6 +10,6 @@ namespace SocialMedia.Api.Dtos.Comment
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int PostId { get; set; }
         public RelatedAccountResponseDto User { get; set; } = null!;
-        public List<CommentResponseDto> Replies { get; set; } = [];
+        public List<ChildCommentModel> Replies { get; set; } = [];
     }
 }
