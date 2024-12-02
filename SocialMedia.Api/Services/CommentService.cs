@@ -7,32 +7,26 @@ using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Services
 {
-    public class CommentService(ICommentRepository _commentRepo, UserManager<UserModel> _userManager, IPostRepository _postRepo) : ICommentService
+    public class CommentService(ICommentRepository commentRepo, UserManager<UserModel> userManager, IPostRepository postRepo) : ICommentService
     {
         public async Task<CommentModel?> Create(CreateCommentRequestDto commentToCreate)
         {
-            var postDb = await _postRepo.GetById(commentToCreate.PostId);
-            var userDb = await _userManager.FindByIdAsync(commentToCreate.UserId);
+            var postDb = await postRepo.GetById(commentToCreate.PostId);
+            var userDb = await userManager.FindByIdAsync(commentToCreate.UserId);
 
             if (postDb == null || userDb == null)
             {
                 return null;
             }
 
-            var createdComment = await _commentRepo.Create(commentToCreate.ToCommentModel());
+            var createdComment = await commentRepo.Create(commentToCreate.ToCommentModel());
 
             return createdComment;
         }
 
-        public async Task<List<CommentModel>> GetAll()
-        {
-            return await _commentRepo.GetAll();
-        }
+        public async Task<List<CommentModel>> GetAll() => await commentRepo.GetAll();
 
-        public async Task<CommentModel?> GetById(int id)
-        {
-            return await _commentRepo.GetById(id);
-        }
+        public async Task<CommentModel?> GetById(int id) => await commentRepo.GetById(id);
 
         public async Task<CommentModel?> Update(UpdateCommentRequestDto commentToUpdate)
         {
@@ -45,7 +39,7 @@ namespace SocialMedia.Api.Services
 
             commentDb.Content = commentToUpdate.Content;
 
-            var updatedComment = await _commentRepo.Update(commentDb);
+            var updatedComment = await commentRepo.Update(commentDb);
 
             return updatedComment;
         }
@@ -59,7 +53,7 @@ namespace SocialMedia.Api.Services
                 return null;
             }
 
-            var deletedComment = await _commentRepo.Delete(commentDb);
+            var deletedComment = await commentRepo.Delete(commentDb);
 
             return deletedComment;
         }

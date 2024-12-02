@@ -9,14 +9,14 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PostsController(IPostService _postService) : ControllerBase
+    public class PostsController(IPostService postService) : ControllerBase
     {
         private readonly string postNotFoundMsg = "The post was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
         {
-            var createdPost = await _postService.Create(postToCreate);
+            var createdPost = await postService.Create(postToCreate);
 
             if (createdPost == null)
             {
@@ -26,14 +26,13 @@ namespace SocialMedia.Api.Controllers
             return CreatedAtAction(
                 nameof(GetById),
                 new { createdPost.Id },
-                createdPost.ToGetPostResponseDto()
-            );
+                createdPost.ToGetPostResponseDto());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var posts = await _postService.GetAll();
+            var posts = await postService.GetAll();
 
             var postsDto = posts.Select(p => p.ToGetPostResponseDto()).ToList();
 
@@ -43,7 +42,7 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var post = await _postService.GetById(id);
+            var post = await postService.GetById(id);
 
             if (post == null)
             {
@@ -56,7 +55,7 @@ namespace SocialMedia.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdatePostRequestDto postToUpdate)
         {
-            var updatedPost = await _postService.Update(postToUpdate);
+            var updatedPost = await postService.Update(postToUpdate);
 
             if (updatedPost == null)
             {
@@ -69,7 +68,7 @@ namespace SocialMedia.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var deletedPost = await _postService.Delete(id);
+            var deletedPost = await postService.Delete(id);
 
             if (deletedPost == null)
             {

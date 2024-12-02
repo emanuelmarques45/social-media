@@ -9,38 +9,37 @@ namespace SocialMedia.Api.Data
         {
             var random = new Random();
 
-            modelBuilder.Entity<PostModel>().HasData(
+            _ = modelBuilder.Entity<PostModel>().HasData(
                 new PostModel
                 {
                     Id = random.Next(),
                     Content = "Sample Post",
                     CreatedAt = DateTime.UtcNow,
-                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2"
+                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2",
                 },
                 new PostModel
                 {
                     Id = random.Next(),
                     Content = "Sample Post",
                     CreatedAt = DateTime.UtcNow,
-                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2"
+                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2",
                 },
                 new PostModel
                 {
                     Id = random.Next(),
                     Content = "Sample Post",
                     CreatedAt = DateTime.UtcNow,
-                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2"
+                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2",
                 },
                 new PostModel
                 {
                     Id = random.Next(),
                     Content = "Sample Post",
                     CreatedAt = DateTime.UtcNow,
-                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2"
-                }
-            );
+                    UserId = "2dc7e742-81c0-47d9-a69a-cf300ee8ffd2",
+                });
 
-            modelBuilder.Entity<CommentModel>().HasData(
+            _ = modelBuilder.Entity<CommentModel>().HasData(
                 new CommentModel
                 {
                     Id = random.Next(),
@@ -104,8 +103,7 @@ namespace SocialMedia.Api.Data
                     CreatedAt = DateTime.UtcNow,
                     UserId = "df35deba-a1ef-44b1-aa54-9c1dfc4bb3b9",
                     PostId = 2,
-                }
-            );
+                });
         }
     }
 }

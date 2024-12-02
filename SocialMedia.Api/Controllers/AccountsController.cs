@@ -76,7 +76,7 @@ namespace SocialMedia.Api.Controllers
                 return StatusCode(409, "This role already exists!");
             }
 
-            await roleManager.CreateAsync(new IdentityRole(roleName));
+            _ = await roleManager.CreateAsync(new IdentityRole(roleName));
 
             return Created();
         }
@@ -139,6 +139,7 @@ namespace SocialMedia.Api.Controllers
                 {
                     users = query.IsDescending ? users.OrderByDescending(u => u.Name) : users.OrderBy(u => u.Name);
                 }
+
                 if (query.SortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
                 {
                     users = query.IsDescending ? users.OrderByDescending(u => u.UserName) : users.OrderBy(u => u.UserName);

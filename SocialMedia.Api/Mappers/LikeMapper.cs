@@ -1,4 +1,4 @@
-﻿using SocialMedia.Api.Dtos.Like;
+﻿using SocialMedia.Api.Dtos.Likes;
 using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Mappers
@@ -12,7 +12,7 @@ namespace SocialMedia.Api.Mappers
                 Id = like.Id,
                 PostId = like.PostId,
                 UserId = like.UserId,
-                CreatedAt = like.CreatedAt
+                CreatedAt = like.CreatedAt,
             };
         }
 
@@ -21,7 +21,7 @@ namespace SocialMedia.Api.Mappers
             return new LikeModel
             {
                 PostId = likeDto.PostId,
-                UserId = likeDto.UserId
+                UserId = likeDto.UserId,
             };
         }
     }

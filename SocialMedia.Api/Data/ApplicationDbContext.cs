@@ -6,35 +6,38 @@ namespace SocialMedia.Api.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : IdentityDbContext<UserModel>(dbContextOptions)
     {
-        public DbSet<PostModel> Post { get; set; }
-        public DbSet<LikeModel> Likes { get; set; }
-        public DbSet<CommentModel> Comment { get; set; }
-        public DbSet<ChildCommentModel> ChildComment { get; set; }
+        public required DbSet<PostModel> Post { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public required DbSet<LikeModel> Likes { get; set; }
+
+        public required DbSet<CommentModel> Comment { get; set; }
+
+        public required DbSet<ChildCommentModel> ChildComment { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
             // Adjust to avoid causing multiple delete paths
-            modelBuilder.Entity<LikeModel>()
+            _ = builder.Entity<LikeModel>()
                 .HasOne(l => l.User)
                 .WithMany(u => u.Likes)
                 .HasForeignKey(l => l.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<CommentModel>()
+            _ = builder.Entity<CommentModel>()
                 .HasOne(c => c.User)
                 .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<UserModel>()
+            _ = builder.Entity<UserModel>()
                 .ToTable("Users")
                 .Ignore(u => u.TwoFactorEnabled)
                 .Ignore(u => u.PhoneNumberConfirmed)
                 .Ignore(u => u.LockoutEnabled);
 
-            //modelBuilder.Seed();
+            // modelBuilder.Seed();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,19 +10,19 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
+            _ = migrationBuilder.DropForeignKey(
                 name: "FK_Comment_Comment_ParentId",
                 table: "Comment");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_Comment_ParentId",
                 table: "Comment");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "ParentId",
                 table: "Comment");
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ChildComment",
                 columns: table => new
                 {
@@ -31,19 +30,19 @@ namespace SocialMedia.Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CommentId = table.Column<int>(type: "int", nullable: true)
+                    CommentId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChildComment", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ChildComment", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ChildComment_Comment_CommentId",
                         column: x => x.CommentId,
                         principalTable: "Comment",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ChildComment_CommentId",
                 table: "ChildComment",
                 column: "CommentId");
@@ -52,21 +51,21 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ChildComment");
 
-            migrationBuilder.AddColumn<int>(
+            _ = migrationBuilder.AddColumn<int>(
                 name: "ParentId",
                 table: "Comment",
                 type: "int",
                 nullable: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Comment_ParentId",
                 table: "Comment",
                 column: "ParentId");
 
-            migrationBuilder.AddForeignKey(
+            _ = migrationBuilder.AddForeignKey(
                 name: "FK_Comment_Comment_ParentId",
                 table: "Comment",
                 column: "ParentId",

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +10,11 @@ using SocialMedia.Api.Interfaces.Services;
 using SocialMedia.Api.Models;
 using SocialMedia.Api.Repository;
 using SocialMedia.Api.Services;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//Ignore object cycling on queries with related data
+// Ignore object cycling on queries with related data
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -31,12 +31,12 @@ builder.Services.AddSwaggerGen(c =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
-        BearerFormat = "JWT"
+        BearerFormat = "JWT",
     };
 
     c.AddSecurityDefinition("Bearer", securityScheme);
 
-    var securityRequirement = new OpenApiSecurityRequirement
+    var securityRequirement = new OpenApiSecurityRequirement()
     {
         {
             new OpenApiSecurityScheme
@@ -44,11 +44,11 @@ builder.Services.AddSwaggerGen(c =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                    Id = "Bearer",
+                },
             },
-            new string[] {}
-        }
+            Array.Empty<string>()
+        },
     };
 
     c.AddSecurityRequirement(securityRequirement);
@@ -56,7 +56,7 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 });
 
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
@@ -91,15 +91,14 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"])
-        )
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"])),
     };
     options.IncludeErrorDetails = true;
 });
 
 builder.Services.AddAuthorization();
 
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
+// builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
@@ -114,7 +113,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins(
+            _ = policy.WithOrigins(
                 "http://127.0.0.1:5500",
                 "http://localhost:4200");
         });
@@ -132,7 +131,7 @@ using (var scope = app.Services.CreateScope())
     {
         if (!await rolemanager.RoleExistsAsync(item))
         {
-            await rolemanager.CreateAsync(new IdentityRole(item));
+            _ = await rolemanager.CreateAsync(new IdentityRole(item));
         }
     }
 }
@@ -148,12 +147,11 @@ app.MapRazorPages();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.MapControllers().AllowAnonymous();
+    _ = app.UseSwagger();
+    _ = app.UseSwaggerUI();
+    _ = app.MapControllers().AllowAnonymous();
 }
 
 app.UseCors();
 
 app.Run();
-

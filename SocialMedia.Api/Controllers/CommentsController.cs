@@ -9,14 +9,14 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CommentsController(ICommentService _commentService) : ControllerBase
+    public class CommentsController(ICommentService commentService) : ControllerBase
     {
         private readonly string commentNotFoundMsg = "The comment was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)
         {
-            var createdComment = await _commentService.Create(commentToCreate);
+            var createdComment = await commentService.Create(commentToCreate);
 
             if (createdComment == null)
             {
@@ -26,14 +26,13 @@ namespace SocialMedia.Api.Controllers
             return CreatedAtAction(
                 nameof(GetById),
                 new { createdComment.Id },
-                createdComment.ToGetCommentResponseDto()
-            );
+                createdComment.ToGetCommentResponseDto());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var comments = await _commentService.GetAll();
+            var comments = await commentService.GetAll();
 
             var commentsDto = comments.Select(c => c.ToGetCommentResponseDto()).ToList();
 
@@ -43,7 +42,7 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var commentDb = await _commentService.GetById(id);
+            var commentDb = await commentService.GetById(id);
 
             if (commentDb == null)
             {
@@ -56,7 +55,7 @@ namespace SocialMedia.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentToUpdate)
         {
-            var updatedPost = await _commentService.Update(commentToUpdate);
+            var updatedPost = await commentService.Update(commentToUpdate);
 
             if (updatedPost == null)
             {
@@ -69,7 +68,7 @@ namespace SocialMedia.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var deletedComment = await _commentService.Delete(id);
+            var deletedComment = await commentService.Delete(id);
 
             if (deletedComment == null)
             {

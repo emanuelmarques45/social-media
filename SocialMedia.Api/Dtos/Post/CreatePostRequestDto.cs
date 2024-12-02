@@ -7,6 +7,7 @@ namespace SocialMedia.Api.Dtos.Post
         [Required]
         [StringLength(280, MinimumLength = 1)]
         public string Content { get; set; } = string.Empty;
+
         [Required]
         public string UserId { get; set; } = string.Empty;
     }

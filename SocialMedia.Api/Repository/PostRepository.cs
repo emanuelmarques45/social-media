@@ -9,8 +9,8 @@ namespace SocialMedia.Api.Repository
     {
         public async Task<PostModel> Create(PostModel postToCreate)
         {
-            await context.Post.AddAsync(postToCreate);
-            await context.SaveChangesAsync();
+            _ = await context.Post.AddAsync(postToCreate);
+            _ = await context.SaveChangesAsync();
 
             return postToCreate;
         }
@@ -35,16 +35,16 @@ namespace SocialMedia.Api.Repository
 
         public async Task<PostModel> Update(PostModel postToUpdate)
         {
-            context.Post.Update(postToUpdate);
-            await context.SaveChangesAsync();
+            _ = context.Post.Update(postToUpdate);
+            _ = await context.SaveChangesAsync();
 
             return postToUpdate;
         }
 
         public async Task<PostModel> Delete(PostModel postToDelete)
         {
-            context.Post.Remove(postToDelete);
-            await context.SaveChangesAsync();
+            _ = context.Post.Remove(postToDelete);
+            _ = await context.SaveChangesAsync();
 
             return postToDelete;
         }

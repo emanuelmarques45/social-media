@@ -7,31 +7,25 @@ using SocialMedia.Api.Models;
 
 namespace SocialMedia.Api.Services
 {
-    public class PostService(IPostRepository _postRepo, UserManager<UserModel> _userManager) : IPostService
+    public class PostService(IPostRepository postRepo, UserManager<UserModel> userManager) : IPostService
     {
         public async Task<PostModel?> Create(CreatePostRequestDto postToCreate)
         {
-            var userDb = await _userManager.FindByIdAsync(postToCreate.UserId);
+            var userDb = await userManager.FindByIdAsync(postToCreate.UserId);
 
             if (userDb == null)
             {
                 return null;
             }
 
-            var createdPost = await _postRepo.Create(postToCreate.ToPostModel());
+            var createdPost = await postRepo.Create(postToCreate.ToPostModel());
 
             return createdPost;
         }
 
-        public async Task<List<PostModel>> GetAll()
-        {
-            return await _postRepo.GetAll();
-        }
+        public async Task<List<PostModel>> GetAll() => await postRepo.GetAll();
 
-        public async Task<PostModel?> GetById(int id)
-        {
-            return await _postRepo.GetById(id);
-        }
+        public async Task<PostModel?> GetById(int id) => await postRepo.GetById(id);
 
         public async Task<PostModel?> Update(UpdatePostRequestDto postToUpdate)
         {
@@ -44,7 +38,7 @@ namespace SocialMedia.Api.Services
 
             postDb.Content = postToUpdate.Content;
 
-            var updatedPost = await _postRepo.Update(postDb);
+            var updatedPost = await postRepo.Update(postDb);
 
             return updatedPost;
         }
@@ -58,7 +52,7 @@ namespace SocialMedia.Api.Services
                 return null;
             }
 
-            var deletedPost = await _postRepo.Delete(postDb);
+            var deletedPost = await postRepo.Delete(postDb);
 
             return deletedPost;
         }

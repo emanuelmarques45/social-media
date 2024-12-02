@@ -17,7 +17,7 @@ namespace SocialMedia.Api.Mappers
                 CreatedAt = user.CreatedAt,
                 Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
                 Likes = user.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
-                Comments = user.Comments.Select(c => c.ToGetCommentResponseDto()).ToList()
+                Comments = user.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
             };
         }
 
@@ -38,7 +38,7 @@ namespace SocialMedia.Api.Mappers
                 Name = user.Name,
                 Email = user.Email,
                 UserName = user.UserName,
-                Token = token
+                Token = token,
             };
         }
 
