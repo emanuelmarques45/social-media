@@ -1,6 +1,9 @@
-﻿namespace SocialMedia.Api.Models
+﻿using SocialMedia.Api.Dtos.Account;
+using SocialMedia.Api.Models;
+
+namespace SocialMedia.Api.Dtos.ChildComment
 {
-    public class ChildCommentModel
+    public class ChildCommentResponseDto
     {
         public int Id { get; set; }
 
@@ -14,6 +17,8 @@
 
         public CommentModel Comment { get; set; } = null!;
 
-        public UserModel User { get; set; } = null!;
+        public RelatedAccountResponseDto User { get; set; } = null!;
+
+        public List<ChildCommentModel> Replies { get; set; } = [];
     }
 }

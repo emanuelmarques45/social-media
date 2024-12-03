@@ -11,7 +11,7 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class PostsController(IPostService postService) : ControllerBase
     {
-        private readonly string postNotFoundMsg = "The post was not found!";
+        private readonly string _postNotFoundMsg = "The post was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
@@ -46,7 +46,7 @@ namespace SocialMedia.Api.Controllers
 
             if (post == null)
             {
-                return NotFound(postNotFoundMsg);
+                return NotFound(_postNotFoundMsg);
             }
 
             return Ok(post.ToGetPostResponseDto());
@@ -59,7 +59,7 @@ namespace SocialMedia.Api.Controllers
 
             if (updatedPost == null)
             {
-                return NotFound(postNotFoundMsg);
+                return NotFound(_postNotFoundMsg);
             }
 
             return Ok(updatedPost.ToGetPostResponseDto());
@@ -72,7 +72,7 @@ namespace SocialMedia.Api.Controllers
 
             if (deletedPost == null)
             {
-                return NotFound(postNotFoundMsg);
+                return NotFound(_postNotFoundMsg);
             }
 
             return NoContent();

@@ -1,5 +1,5 @@
 ﻿using SocialMedia.Api.Dtos.Account;
-using SocialMedia.Api.Models;
+using SocialMedia.Api.Dtos.ChildComment;
 
 namespace SocialMedia.Api.Dtos.Comment
 {
@@ -15,6 +15,6 @@ namespace SocialMedia.Api.Dtos.Comment
 
         public RelatedAccountResponseDto User { get; set; } = null!;
 
-        public List<ChildCommentModel> Replies { get; set; } = [];
+        public List<ChildCommentResponseDto> Replies { get; set; } = [];
     }
 }

@@ -104,6 +104,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IChildCommentService, ChildCommentService>();
+builder.Services.AddScoped<IChildCommentRepository, ChildCommentRepository>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddProblemDetails();

@@ -11,7 +11,7 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class CommentsController(ICommentService commentService) : ControllerBase
     {
-        private readonly string commentNotFoundMsg = "The comment was not found!";
+        private readonly string _commentNotFoundMsg = "The comment was not found!";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)
@@ -46,7 +46,7 @@ namespace SocialMedia.Api.Controllers
 
             if (commentDb == null)
             {
-                return NotFound(commentNotFoundMsg);
+                return NotFound(_commentNotFoundMsg);
             }
 
             return Ok(commentDb.ToGetCommentResponseDto());
@@ -55,14 +55,14 @@ namespace SocialMedia.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentToUpdate)
         {
-            var updatedPost = await commentService.Update(commentToUpdate);
+            var updatedComment = await commentService.Update(commentToUpdate);
 
-            if (updatedPost == null)
+            if (updatedComment == null)
             {
-                return NotFound(commentNotFoundMsg);
+                return NotFound(_commentNotFoundMsg);
             }
 
-            return Ok(updatedPost.ToGetCommentResponseDto());
+            return Ok(updatedComment.ToGetCommentResponseDto());
         }
 
         [HttpDelete("{id}")]
@@ -72,7 +72,7 @@ namespace SocialMedia.Api.Controllers
 
             if (deletedComment == null)
             {
-                return NotFound(commentNotFoundMsg);
+                return NotFound(_commentNotFoundMsg);
             }
 
             return NoContent();
