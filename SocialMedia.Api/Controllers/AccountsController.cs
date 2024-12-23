@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Api.Dtos.Account;
-using SocialMedia.Api.Helpers.Query;
-using SocialMedia.Api.Interfaces.Services;
-using SocialMedia.Api.Mappers;
-using SocialMedia.Api.Models;
+using SocialMedia.Api.Services.Auth;
+using SocialMedia.Classes.Dtos.Account;
+using SocialMedia.Classes.Helpers.Query;
+using SocialMedia.Classes.Mappers;
+using SocialMedia.Classes.Models;
 
 namespace SocialMedia.Api.Controllers
 {

@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SocialMedia.Api.Data;
-using SocialMedia.Api.Interfaces.Repository;
-using SocialMedia.Api.Interfaces.Services;
-using SocialMedia.Api.Models;
-using SocialMedia.Api.Repository;
-using SocialMedia.Api.Services;
+using SocialMedia.Classes.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,14 +57,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireDigit = false;
     options.Password.RequireUppercase = false;
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.SignIn.RequireConfirmedAccount = false;
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -98,14 +93,14 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<IPostRepository, PostRepository>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IChildCommentService, ChildCommentService>();
-builder.Services.AddScoped<IChildCommentRepository, ChildCommentRepository>();
+// builder.Services.AddScoped<IAuthService, AuthService>();
+// builder.Services.AddScoped<IPostService, PostService>();
+// builder.Services.AddScoped<IPostRepository, PostRepository>();
+// builder.Services.AddScoped<ICommentService, CommentService>();
+// builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+// builder.Services.AddScoped<IChildCommentService, ChildCommentService>();
+// builder.Services.AddScoped<IChildCommentRepository, ChildCommentRepository>();
+builder.Services.AddServices();
 
 builder.Services.AddRazorPages();
 builder.Services.AddProblemDetails();
@@ -117,7 +112,8 @@ builder.Services.AddCors(options =>
         {
             _ = policy.WithOrigins(
                 "http://127.0.0.1:5500",
-                "http://localhost:4200");
+                "http://localhost:4200",
+                "https://localhost:7210");
         });
 });
 

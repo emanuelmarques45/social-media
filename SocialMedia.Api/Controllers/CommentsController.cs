@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Api.Dtos.Comment;
-using SocialMedia.Api.Interfaces.Services;
-using SocialMedia.Api.Mappers;
+using SocialMedia.Api.Services.Comment;
+using SocialMedia.Classes.Dtos.Comment;
+using SocialMedia.Classes.Mappers;
 
 namespace SocialMedia.Api.Controllers
 {

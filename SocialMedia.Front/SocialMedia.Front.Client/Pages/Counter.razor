@@ -1,0 +1,23 @@
+﻿@page "/counter"
+@using SocialMedia.Classes.Dtos.Post
+@using SocialMedia.Classes.Interfaces
+@using SocialMedia.Classes.Models
+@inject IPostService PostService
+@rendermode @(new InteractiveWebAssemblyRenderMode(false))
+
+<PageTitle>Counter</PageTitle>
+
+<button class="btn btn-primary" @onclick="GetPosts">Get posts</button>
+
+@foreach(var post in _posts) {
+    <p>@post.Id</p>
+    <p>@post.Content</p>
+}
+
+@code {
+    private List<PostModel> _posts = [];
+
+    private async Task GetPosts() {
+        _posts = await PostService.GetAll();
+    }
+}

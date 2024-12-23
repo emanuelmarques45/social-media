@@ -10,19 +10,19 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            _ = migrationBuilder.AddColumn<string>(
                 name: "UserId",
                 table: "ChildComment",
                 type: "nvarchar(450)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ChildComment_UserId",
                 table: "ChildComment",
                 column: "UserId");
 
-            migrationBuilder.AddForeignKey(
+            _ = migrationBuilder.AddForeignKey(
                 name: "FK_ChildComment_Users_UserId",
                 table: "ChildComment",
                 column: "UserId",
@@ -34,15 +34,15 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
+            _ = migrationBuilder.DropForeignKey(
                 name: "FK_ChildComment_Users_UserId",
                 table: "ChildComment");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_ChildComment_UserId",
                 table: "ChildComment");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "UserId",
                 table: "ChildComment");
         }
