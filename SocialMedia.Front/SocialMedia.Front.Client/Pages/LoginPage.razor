@@ -1,0 +1,34 @@
+﻿@page "/auth/login"
+@using Microsoft.AspNetCore.Http
+@using SocialMedia.Classes.Dtos.User
+@using SocialMedia.Classes.Interfaces
+@using SocialMedia.Front.Client.Components
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveAuto
+
+<h3>Login</h3>
+
+<form @onsubmit="(args) => Login(args)">
+    <input placeholder="email" type="email" @bind="LoginRequest.Email" />
+    <input placeholder="username" @bind="LoginRequest.UserName" />
+    <input placeholder="password" type="password" @bind="LoginRequest.Password" />
+    <button>Login</button>
+</form>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginRequestDto LoginRequest { get; set; } = new LoginRequestDto { UserName = "string", Password = "stringst" };
+
+    private async Task Login(EventArgs args)
+    {
+        var response = await AuthService.Login(LoginRequest);
+
+        if (response is null)
+        {
+            return;
+        }
+
+        Navigation.NavigateTo("/feed");
+    }
+}

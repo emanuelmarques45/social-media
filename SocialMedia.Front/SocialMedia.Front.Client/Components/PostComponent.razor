@@ -1,0 +1,52 @@
+﻿@using SocialMedia.Classes.Dtos.Post
+@inject NavigationManager Navigation
+
+<article @onclick="() => OpenPost(Post.Id)" class="post-container">
+    <h3>@Post.Id</h3>
+    <h2>@Post.Content</h2>
+
+    @if (ShowComments)
+    {
+        <ul class="comments-container">
+            @foreach (var comment in Post.Comments)
+            {
+                <li>
+                    <p><b>@comment.User.UserName</b></p>
+                    <p>@comment.Content</p>
+                </li>
+            }
+        </ul>
+    }
+</article>
+
+@code {
+    [Parameter]
+    public PostResponseDto Post { get; set; } = default!;
+
+    [Parameter]
+    public bool ShowComments { get; set; }
+
+    [Parameter]
+    public bool Openable { get; set; }
+
+    private void OpenPost(int id)
+    {
+        if (!Openable) {
+            return;
+        }
+
+        Navigation.NavigateTo($"/post/{id}");
+    }
+}
+
+<style>
+    .post-container {
+        padding: var(--sz-5);
+        border: 1px solid var(--clr-polynesian-blue);
+        cursor: pointer;
+    }
+
+    .comments-container {
+        margin-top: var(--sz-4);
+    }
+</style>

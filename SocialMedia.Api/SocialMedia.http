@@ -1,0 +1,38 @@
+@SocialMedia_HostAddress = https://localhost
+
+GET {{SocialMedia_HostAddress}}/api/user
+Accept: application/json
+
+###
+
+POST {{SocialMedia_HostAddress}}/api/account/register
+Content-Type: application/json
+
+{
+  "name": "Emanuel",
+  "email": "emanuell@gmail.com",
+  "UserName": "emanuelmarques",
+  "password": "emanuel123"
+}
+
+###
+
+GET {{SocialMedia_HostAddress}}/api/post
+Accept: application/json
+
+###
+
+POST {{SocialMedia_HostAddress}}/api/account/login
+Content-Type: application/json
+
+{
+  "email": "emanuel@gmail.com",
+  "UserName": "emanuel.marques",
+  "password": "emanuel123"
+}
+
+###
+
+DELETE {{SocialMedia_HostAddress}}/api/account/113d3352-4e58-433c-b20f-8b4884167ff2
+
+
