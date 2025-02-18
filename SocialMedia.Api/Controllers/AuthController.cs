@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +13,18 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     public class AuthController(UserManager<UserModel> userManager, IAuthService authService) : ControllerBase
     {
+        [HttpGet("user")]
+        public IActionResult GetUser()
+        {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userClaims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+                return Ok(userClaims);
+            }
+
+            return Unauthorized();
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
@@ -58,23 +68,6 @@ namespace SocialMedia.Api.Controllers
                 return Unauthorized("Username or password incorrects!");
             }
 
-            var user = await userManager.FindByNameAsync(response.Name);
-
-            var claims = await userManager.GetClaimsAsync(user!);
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            var authProperties = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1),
-            };
-
-            await HttpContext.SignInAsync(
-                claimsPrincipal,
-                authProperties);
-
             return Ok(response);
         }
 
@@ -83,8 +76,6 @@ namespace SocialMedia.Api.Controllers
         {
             await HttpContext.SignOutAsync();
             return NoContent();
-
-            // return RedirectToAction("index", "login");
         }
     }
 }

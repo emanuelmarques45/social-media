@@ -74,10 +74,17 @@ namespace SocialMedia.Api.Services
                 return null;
             }
 
-            var token = await GenerateAccessToken(userDb);
-            var response = userDb.ToAuthResponseDto(token);
+            var result = await signInManager.PasswordSignInAsync(userDb, loginDto.Password, false, false);
 
-            return response;
+            if (result.Succeeded)
+            {
+                var token = await GenerateAccessToken(userDb);
+                var response = userDb.ToAuthResponseDto(token);
+
+                return response;
+            }
+
+            return null;
         }
 
         public async Task<UserModel?> GetCurrentUser()

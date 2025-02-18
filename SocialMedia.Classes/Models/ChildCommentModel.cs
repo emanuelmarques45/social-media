@@ -8,7 +8,7 @@
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public int? CommentId { get; set; }
+        public int CommentId { get; set; }
 
         public required string UserId { get; set; }
 

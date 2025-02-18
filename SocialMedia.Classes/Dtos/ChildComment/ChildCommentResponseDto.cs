@@ -11,7 +11,7 @@ namespace SocialMedia.Classes.Dtos.ChildComment
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public int? CommentId { get; set; }
+        public int CommentId { get; set; }
 
         public CommentModel Comment { get; set; } = default!;
 

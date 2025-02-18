@@ -10,22 +10,22 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Follower",
                 columns: table => new
                 {
                     FollowerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FollowingId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    FollowingId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Follower", x => new { x.FollowerId, x.FollowingId });
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_Follower", x => new { x.FollowerId, x.FollowingId });
+                    _ = table.ForeignKey(
                         name: "FK_Follower_Users_FollowerId",
                         column: x => x.FollowerId,
                         principalTable: "Users",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK_Follower_Users_FollowingId",
                         column: x => x.FollowingId,
                         principalTable: "Users",
@@ -33,7 +33,7 @@ namespace SocialMedia.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Follower_FollowingId",
                 table: "Follower",
                 column: "FollowingId");
@@ -42,7 +42,7 @@ namespace SocialMedia.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Follower");
         }
     }

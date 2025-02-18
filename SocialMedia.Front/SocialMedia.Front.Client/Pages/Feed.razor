@@ -1,0 +1,26 @@
+﻿@using SocialMedia.Classes.Dtos.Post
+@using SocialMedia.Classes.Interfaces
+
+@page "/feed"
+@inject IPostService PostService
+@rendermode InteractiveAuto
+
+<h3>Feed</h3>
+
+<AuthorizeView>
+    @foreach (var post in Posts)
+    {
+        <div>@post.Content</div>
+    }
+</AuthorizeView>
+
+@code {
+    List<PostResponseDto> Posts { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Posts = await PostService.GetAll();
+    }
+}

@@ -55,11 +55,6 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(securityRequirement);
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-});
-
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -71,40 +66,8 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddCookie(options =>
-{
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
-    options.LoginPath = "/auth/login";
-})
-    .AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"]!)),
-    };
-    options.IncludeErrorDetails = true;
-});
-
-var multiSchemePolicy = new AuthorizationPolicyBuilder(
-    CookieAuthenticationDefaults.AuthenticationScheme,
-    JwtBearerDefaults.AuthenticationScheme)
-  .RequireAuthenticatedUser()
-  .Build();
-
-builder.Services.AddAuthorizationBuilder().SetDefaultPolicy(multiSchemePolicy);
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager();
 
 builder.Services.AddRazorPages();
 builder.Services.AddProblemDetails();
@@ -112,12 +75,58 @@ builder.Services.AddProblemDetails();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
+    {
+        _ = policy.WithOrigins("https://localhost:7210")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
+    });
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            _ = policy.WithOrigins("https://localhost:7210")
-                       .AllowAnyMethod()
-                       .AllowAnyHeader()
-                       .AllowCredentials();
-        });
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"] !)),
+        };
+        options.IncludeErrorDetails = true;
+    });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    options.LoginPath = "/Account/Login";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.None;
+});
+
+var multiSchemePolicy = new AuthorizationPolicyBuilder(
+   CookieAuthenticationDefaults.AuthenticationScheme,
+   JwtBearerDefaults.AuthenticationScheme)
+ .RequireAuthenticatedUser()
+ .Build();
+
+builder.Services.AddAuthorizationBuilder().SetDefaultPolicy(multiSchemePolicy);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o =>
+    {
+        _ = o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+        _ = o.MigrationsAssembly("SocialMedia.Api");
+    });
 });
 
 builder.Services.AddHttpContextAccessor();

@@ -16,6 +16,6 @@
 
         public UserModel User { get; set; } = default!;
 
-        public List<ChildCommentModel> Replies { get; set; } = [];
+        public List<ChildCommentModel> ChildComments { get; set; } = [];
     }
 }

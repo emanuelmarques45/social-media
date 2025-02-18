@@ -7,35 +7,37 @@ namespace SocialMedia.Api.Migrations
     /// <inheritdoc />
     public partial class Likes_Primary_Key : Migration
     {
+        private static readonly string[] Columns = new[] { "PostId", "UserId" };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_Likes",
                 table: "Likes");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_Likes_PostId",
                 table: "Likes");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Id",
                 table: "Likes");
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_Likes",
                 table: "Likes",
-                columns: new[] { "PostId", "UserId" });
+                columns: Columns);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_Likes",
                 table: "Likes");
 
-            migrationBuilder.AddColumn<int>(
+            _ = migrationBuilder.AddColumn<int>(
                 name: "Id",
                 table: "Likes",
                 type: "int",
@@ -43,12 +45,12 @@ namespace SocialMedia.Api.Migrations
                 defaultValue: 0)
                 .Annotation("SqlServer:Identity", "1, 1");
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_Likes",
                 table: "Likes",
                 column: "Id");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Likes_PostId",
                 table: "Likes",
                 column: "PostId");

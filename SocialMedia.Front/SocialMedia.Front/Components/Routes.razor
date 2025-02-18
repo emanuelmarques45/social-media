@@ -1,12 +1,7 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@using SocialMedia.Front.Client.Components
-@using SocialMedia.Front.Components.Layout
-
-<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
+﻿<Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
             <NotAuthorized>
-                <p>You are not authorized.</p>
                 <RedirectToLogin />
             </NotAuthorized>
         </AuthorizeRouteView>

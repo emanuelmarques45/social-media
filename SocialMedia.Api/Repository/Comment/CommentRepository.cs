@@ -19,7 +19,7 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
-                .Include(c => c.Replies)
+                .Include(c => c.ChildComments)
                 .ToListAsync();
         }
 
@@ -27,7 +27,7 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
-                .Include(c => c.Replies)
+                .Include(c => c.ChildComments)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -41,6 +41,7 @@ namespace SocialMedia.Api.Repository.Comment
 
         public async Task<CommentModel> Delete(CommentModel commentToDelete)
         {
+            context.ChildComment.RemoveRange(commentToDelete.ChildComments);
             _ = context.Comment.Remove(commentToDelete);
             _ = await context.SaveChangesAsync();
 

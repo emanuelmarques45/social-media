@@ -8,7 +8,7 @@ namespace SocialMedia.Classes.Data
     {
         public required DbSet<PostModel> Post { get; set; }
 
-        public required DbSet<LikeModel> Likes { get; set; }
+        public required DbSet<LikeModel> AppLike { get; set; }
 
         public required DbSet<CommentModel> Comment { get; set; }
 
@@ -31,8 +31,14 @@ namespace SocialMedia.Classes.Data
                   .HasForeignKey(c => c.UserId)
                   .OnDelete(DeleteBehavior.NoAction);
 
+            _ = builder.Entity<ChildCommentModel>()
+                  .HasOne(c => c.Comment)
+                  .WithMany(u => u.ChildComments)
+                  .HasForeignKey(c => c.CommentId)
+                  .OnDelete(DeleteBehavior.NoAction);
+
             _ = builder.Entity<UserModel>()
-                .ToTable("Users")
+                .ToTable("AppUser")
                 .Ignore(u => u.TwoFactorEnabled)
                 .Ignore(u => u.PhoneNumberConfirmed)
                 .Ignore(u => u.LockoutEnabled)

@@ -163,7 +163,7 @@ namespace SocialMedia.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CommentId")
+                    b.Property<int>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -238,7 +238,7 @@ namespace SocialMedia.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("AppLike");
                 });
 
             modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
@@ -331,7 +331,7 @@ namespace SocialMedia.Api.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("AppUser", (string)null);
                 });
 
             modelBuilder.Entity("UserModelUserModel", b =>
@@ -403,8 +403,10 @@ namespace SocialMedia.Api.Migrations
             modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
                 {
                     b.HasOne("SocialMedia.Classes.Models.CommentModel", "Comment")
-                        .WithMany("Replies")
-                        .HasForeignKey("CommentId");
+                        .WithMany("ChildComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
                         .WithMany()
@@ -483,7 +485,7 @@ namespace SocialMedia.Api.Migrations
 
             modelBuilder.Entity("SocialMedia.Classes.Models.CommentModel", b =>
                 {
-                    b.Navigation("Replies");
+                    b.Navigation("ChildComments");
                 });
 
             modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
