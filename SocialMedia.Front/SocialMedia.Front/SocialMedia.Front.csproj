@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="8.2.0" />
     <ProjectReference Include="..\..\SocialMedia.Api\SocialMedia.Api.csproj" />
     <ProjectReference Include="..\..\SocialMedia.Classes\SocialMedia.Classes.csproj" />
     <ProjectReference Include="..\SocialMedia.Front.Client\SocialMedia.Front.Client.csproj" />

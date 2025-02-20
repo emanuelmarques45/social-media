@@ -9,6 +9,8 @@ namespace SocialMedia.Classes.Interfaces
 
         public Task<AuthResponseDto?> Login(LoginRequestDto loginDto);
 
+        public Task Logout();
+
         public Task<UserModel?> GetCurrentUser();
     }
 }

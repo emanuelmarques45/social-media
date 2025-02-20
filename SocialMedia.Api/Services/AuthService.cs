@@ -11,13 +11,33 @@ using SocialMedia.Classes.Models;
 namespace SocialMedia.Api.Services
 {
     [Service(ServiceLifetime.Scoped)]
-    public class AuthService(IConfiguration config, UserManager<UserModel> userManager, IHttpContextAccessor httpContext, SignInManager<UserModel> signInManager) : IAuthService
+    public class AuthService : IAuthService
     {
-        private readonly SymmetricSecurityKey _key = new(Encoding.UTF8.GetBytes(config["JWT:SignInKey"]!));
+        private readonly SymmetricSecurityKey _key;
+        private readonly IConfiguration _config;
+        private readonly UserManager<UserModel> _userManager;
+        private readonly IHttpContextAccessor _httpContext;
+        private readonly SignInManager<UserModel> _signInManager;
+
+        public AuthService(IConfiguration config, UserManager<UserModel> userManager, IHttpContextAccessor httpContext, SignInManager<UserModel> signInManager)
+        {
+            var signInKey = config["JWT:SignInKey"];
+
+            if (string.IsNullOrEmpty(signInKey))
+            {
+                throw new ArgumentNullException("JWT:SignInKey", "JWT Sign-In Key is not set in the _configuration.");
+            }
+
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signInKey));
+            _config = config;
+            _userManager = userManager;
+            _httpContext = httpContext;
+            _signInManager = signInManager;
+        }
 
         public async Task<IEnumerable<Claim>> GetUserClaims(UserModel user)
         {
-            var userRoles = await userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
             {
@@ -35,16 +55,16 @@ namespace SocialMedia.Api.Services
         {
             var claims = await GetUserClaims(user);
 
-            _ = await userManager.RemoveClaimsAsync(user, claims);
+            _ = await _userManager.RemoveClaimsAsync(user, claims);
 
-            _ = await userManager.AddClaimsAsync(user, claims);
+            _ = await _userManager.AddClaimsAsync(user, claims);
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = config["JWT:Issuer"],
-                Audience = config["JWT:Audience"],
+                Issuer = _config["JWT:Issuer"],
+                Audience = _config["JWT:Audience"],
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(3),
                 SigningCredentials = credentials,
@@ -63,18 +83,18 @@ namespace SocialMedia.Api.Services
 
             if (!string.IsNullOrEmpty(loginDto.Email))
             {
-                userDb = await userManager.FindByEmailAsync(loginDto.Email);
+                userDb = await _userManager.FindByEmailAsync(loginDto.Email);
             } else if (!string.IsNullOrEmpty(loginDto.UserName))
             {
-                userDb = await userManager.FindByNameAsync(loginDto.UserName);
+                userDb = await _userManager.FindByNameAsync(loginDto.UserName);
             }
 
-            if (userDb is null || !(await signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
+            if (userDb is null || !(await _signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
             {
                 return null;
             }
 
-            var result = await signInManager.PasswordSignInAsync(userDb, loginDto.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(userDb, loginDto.Password, false, false);
 
             if (result.Succeeded)
             {
@@ -87,16 +107,18 @@ namespace SocialMedia.Api.Services
             return null;
         }
 
+        public async Task Logout() => await _signInManager.SignOutAsync();
+
         public async Task<UserModel?> GetCurrentUser()
         {
-            if (httpContext.HttpContext!.User.Identity?.IsAuthenticated == true)
+            if (_httpContext.HttpContext!.User.Identity?.IsAuthenticated == true)
             {
-                var claims = httpContext.HttpContext!.User.Claims;
+                var claims = _httpContext.HttpContext!.User.Claims;
 
                 var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
 
-                var user = await userManager.FindByNameAsync(username ?? string.Empty) ?? await userManager.FindByEmailAsync(email ?? string.Empty);
+                var user = await _userManager.FindByNameAsync(username ?? string.Empty) ?? await _userManager.FindByEmailAsync(email ?? string.Empty);
 
                 return user;
             }

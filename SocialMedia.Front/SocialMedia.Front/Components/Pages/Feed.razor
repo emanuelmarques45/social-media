@@ -1,13 +1,15 @@
-﻿@using SocialMedia.Classes.Dtos.Post
+﻿@using Microsoft.AspNetCore.Authorization
+@using SocialMedia.Classes.Dtos.Post
 @using SocialMedia.Classes.Interfaces
 
 @page "/feed"
 @inject IPostService PostService
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
+@attribute [Authorize(Roles="Admin")]
 
 <h3>Feed</h3>
 
-<AuthorizeView>
+<AuthorizeView Roles="Admin">
     @foreach (var post in Posts)
     {
         <div>@post.Content</div>
