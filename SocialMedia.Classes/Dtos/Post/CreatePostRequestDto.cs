@@ -6,9 +6,9 @@ namespace SocialMedia.Classes.Dtos.Post
     {
         [Required]
         [StringLength(280, MinimumLength = 1)]
-        public required string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         [Required]
-        public required string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }

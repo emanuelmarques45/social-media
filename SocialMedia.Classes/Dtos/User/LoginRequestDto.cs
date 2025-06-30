@@ -9,6 +9,6 @@ namespace SocialMedia.Classes.Dtos.User
         public string? UserName { get; set; }
 
         [Required]
-        public required string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -5,7 +5,7 @@ using SocialMedia.Classes.Models;
 namespace SocialMedia.Api.Repository.Post
 {
     [Service(ServiceLifetime.Scoped)]
-    public class PostRepository(ApplicationDbContext context) : IPostRepository
+    public class PostRepository(ApplicationDbContext context, IDbContextFactory<ApplicationDbContext> contextFactory) : IPostRepository
     {
         public async Task<PostModel> Create(PostModel postToCreate)
         {
@@ -17,9 +17,12 @@ namespace SocialMedia.Api.Repository.Post
 
         public async Task<List<PostModel>> GetAll()
         {
-            return await context.Post
+            await using var context = await contextFactory.CreateDbContextAsync();
+
+            return await context.Post.AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Comments)
+                    .ThenInclude(p => p.User)
                 .Include(p => p.Likes)
                 .ToListAsync();
         }

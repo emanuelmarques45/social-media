@@ -54,6 +54,9 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(securityRequirement);
 });
 
+builder.Services.AddRazorPages();
+builder.Services.AddProblemDetails();
+
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -67,60 +70,48 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddRazorPages();
-builder.Services.AddProblemDetails();
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        _ = policy.WithOrigins("https://localhost:7210")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowCredentials();
-    });
-});
-
-builder.Services.AddAuthentication().AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"] !)),
-        };
-        options.IncludeErrorDetails = true;
-    });
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.ExpireTimeSpan = TimeSpan.FromHours(1);
-    options.LoginPath = "/Account/Login";
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
 });
 
-builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+.AddJwtBearer(options =>
 {
-    var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
-        IdentityConstants.ApplicationScheme,
-        JwtBearerDefaults.AuthenticationScheme);
-    defaultAuthorizationPolicyBuilder =
-        defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
-    options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"] !)),
+    };
+    options.IncludeErrorDetails = true;
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+var policy = new AuthorizationPolicyBuilder(
+    IdentityConstants.ApplicationScheme, JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser().Build();
+
+builder.Services.AddAuthorizationBuilder().SetDefaultPolicy(policy);
+
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {
-    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), o =>
+    _ = options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("SocialMedia.Api"));
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
     {
-        _ = o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        _ = o.MigrationsAssembly("SocialMedia.Api");
+        _ = policy.WithOrigins("https://localhost:7213")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials();
     });
 });
 
@@ -128,24 +119,9 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var rolemanager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    var roles = new[] { "Admin", "User" };
-
-    foreach (var item in roles)
-    {
-        if (!await rolemanager.RoleExistsAsync(item))
-        {
-            _ = await rolemanager.CreateAsync(new IdentityRole(item));
-        }
-    }
-}
+app.UseCors();
 
 app.UseHttpsRedirection();
-
-app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace SocialMedia.Classes.Models
+﻿namespace SocialMedia.Classes.Models
 {
-    [PrimaryKey(nameof(PostId), nameof(UserId))]
     public class LikeModel
     {
+        public int Id { get; set; }
+
         public int PostId { get; set; }
 
         public required string UserId { get; set; }

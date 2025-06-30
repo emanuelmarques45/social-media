@@ -12,7 +12,7 @@ using SocialMedia.Classes.Data;
 namespace SocialMedia.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240925013558_Init")]
+    [Migration("20250312194621_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace SocialMedia.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -158,7 +158,40 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.CommentModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChildComment");
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Models.CommentModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +204,9 @@ namespace SocialMedia.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
@@ -189,7 +224,7 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -198,7 +233,9 @@ namespace SocialMedia.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
@@ -213,10 +250,10 @@ namespace SocialMedia.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("AppLike");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.PostModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -229,7 +266,9 @@ namespace SocialMedia.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -242,7 +281,7 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("Post");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.UserModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.UserModel", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -255,7 +294,9 @@ namespace SocialMedia.Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -302,7 +343,22 @@ namespace SocialMedia.Api.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("AppUser", (string)null);
+                });
+
+            modelBuilder.Entity("UserModelUserModel", b =>
+                {
+                    b.Property<string>("FollowerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FollowingId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FollowerId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("Follower", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -316,7 +372,7 @@ namespace SocialMedia.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.UserModel", null)
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -325,7 +381,7 @@ namespace SocialMedia.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.UserModel", null)
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -340,7 +396,7 @@ namespace SocialMedia.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SocialMedia.Api.Models.UserModel", null)
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -349,22 +405,41 @@ namespace SocialMedia.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.UserModel", null)
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.CommentModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.PostModel", "Post")
+                    b.HasOne("SocialMedia.Classes.Models.CommentModel", "Comment")
+                        .WithMany("ChildComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Models.CommentModel", b =>
+                {
+                    b.HasOne("SocialMedia.Classes.Models.PostModel", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SocialMedia.Api.Models.UserModel", "User")
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -375,15 +450,15 @@ namespace SocialMedia.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.PostModel", "Post")
+                    b.HasOne("SocialMedia.Classes.Models.PostModel", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SocialMedia.Api.Models.UserModel", "User")
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
                         .WithMany("Likes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -394,9 +469,9 @@ namespace SocialMedia.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.PostModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
                 {
-                    b.HasOne("SocialMedia.Api.Models.UserModel", "User")
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -405,14 +480,34 @@ namespace SocialMedia.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.PostModel", b =>
+            modelBuilder.Entity("UserModelUserModel", b =>
+                {
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
+                        .WithMany()
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", null)
+                        .WithMany()
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Models.CommentModel", b =>
+                {
+                    b.Navigation("ChildComments");
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Likes");
                 });
 
-            modelBuilder.Entity("SocialMedia.Api.Models.UserModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.UserModel", b =>
                 {
                     b.Navigation("Comments");
 

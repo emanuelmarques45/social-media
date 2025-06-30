@@ -16,7 +16,7 @@ namespace SocialMedia.Api.Services
         private readonly SymmetricSecurityKey _key;
         private readonly IConfiguration _config;
         private readonly UserManager<UserModel> _userManager;
-        private readonly IHttpContextAccessor _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SignInManager<UserModel> _signInManager;
 
         public AuthService(IConfiguration config, UserManager<UserModel> userManager, IHttpContextAccessor httpContext, SignInManager<UserModel> signInManager)
@@ -31,7 +31,7 @@ namespace SocialMedia.Api.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signInKey));
             _config = config;
             _userManager = userManager;
-            _httpContext = httpContext;
+            _httpContextAccessor = httpContext;
             _signInManager = signInManager;
         }
 
@@ -41,9 +41,9 @@ namespace SocialMedia.Api.Services
 
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.Name!),
+                new(ClaimTypes.Name, user.UserName!),
                 new(ClaimTypes.Email, user.Email!),
-                new(ClaimTypes.GivenName, user.UserName!),
+                new(ClaimTypes.GivenName, user.Name!),
             };
 
             claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -111,9 +111,9 @@ namespace SocialMedia.Api.Services
 
         public async Task<UserModel?> GetCurrentUser()
         {
-            if (_httpContext.HttpContext!.User.Identity?.IsAuthenticated == true)
+            if (_httpContextAccessor.HttpContext!.User.Identity?.IsAuthenticated == true)
             {
-                var claims = _httpContext.HttpContext!.User.Claims;
+                var claims = _httpContextAccessor.HttpContext!.User.Claims;
 
                 var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;

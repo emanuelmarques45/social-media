@@ -6,7 +6,7 @@
 
         public int PostId { get; set; }
 
-        public required string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
     }

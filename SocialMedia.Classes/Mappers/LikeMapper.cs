@@ -15,7 +15,7 @@ namespace SocialMedia.Classes.Mappers
             };
         }
 
-        public static LikeModel ToLikeModelDto(this CreateLikeRequestDto likeDto)
+        public static LikeModel ToLikeModel(this CreateLikeRequestDto likeDto)
         {
             return new LikeModel
             {

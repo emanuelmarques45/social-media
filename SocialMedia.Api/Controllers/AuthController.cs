@@ -12,8 +12,8 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     public class AuthController(UserManager<UserModel> userManager, IAuthService authService) : ControllerBase
     {
-        [HttpGet("user")]
-        public IActionResult GetUser()
+        [HttpGet("user-claims")]
+        public IActionResult GetUserClaims()
         {
             if (User.Identity?.IsAuthenticated == true)
             {
@@ -22,6 +22,19 @@ namespace SocialMedia.Api.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await authService.GetCurrentUser();
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
 
         [HttpPost("register")]

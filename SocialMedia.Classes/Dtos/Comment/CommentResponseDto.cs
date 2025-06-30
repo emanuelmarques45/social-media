@@ -15,6 +15,6 @@ namespace SocialMedia.Classes.Dtos.Comment
 
         public RelatedUserResponseDto User { get; set; } = default!;
 
-        public List<ChildCommentResponseDto> Replies { get; set; } = [];
+        public List<ChildCommentResponseDto> ChidComments { get; set; } = [];
     }
 }

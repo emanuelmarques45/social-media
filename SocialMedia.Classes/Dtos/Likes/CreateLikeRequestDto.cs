@@ -8,6 +8,6 @@ namespace SocialMedia.Classes.Dtos.Likes
         public int PostId { get; set; }
 
         [Required]
-        public required string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
     }
 }

@@ -14,7 +14,7 @@ namespace SocialMedia.Classes.Mappers
                 CreatedAt = comment.CreatedAt,
                 PostId = comment.PostId,
                 User = comment.User.ToGetRelatedUserResponseDto(),
-                Replies = comment.ChildComments.Select(c => c.ToGetChildCommentResponseDto()).ToList(),
+                ChidComments = comment.ChildComments.Select(c => c.ToGetChildCommentResponseDto()).ToList(),
             };
         }
 

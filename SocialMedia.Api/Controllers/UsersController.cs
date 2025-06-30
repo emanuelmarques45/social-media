@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Classes.Dtos.User;
@@ -12,7 +11,8 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
+    // [Authorize]
     public class UsersController(
         UserManager<UserModel> userManager,
         IAuthService authService,
@@ -20,7 +20,8 @@ namespace SocialMedia.Api.Controllers
         ) : ControllerBase
     {
         [HttpPost("assign-role")]
-        [Authorize(Roles = "Admin")]
+
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignRole(string id, string roleName)
         {
             var userDb = await userManager.FindByIdAsync(id);
@@ -41,7 +42,8 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpPost("create-role")]
-        [Authorize(Roles = "Admin")]
+
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole(string roleName)
         {
             if (await roleManager.RoleExistsAsync(roleName))
@@ -54,21 +56,9 @@ namespace SocialMedia.Api.Controllers
             return Created();
         }
 
-        [HttpGet("current")]
-        public async Task<IActionResult> GetCurrentUser()
-        {
-            var user = await authService.GetCurrentUser();
-
-            if (user is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
-        }
-
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll([FromQuery] UserQuery query)
         {
             var users = userManager.Users;
@@ -158,7 +148,8 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] string id)
         {
             var userDb = await userManager.FindByIdAsync(id);

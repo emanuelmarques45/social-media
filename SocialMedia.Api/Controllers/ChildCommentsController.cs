@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Classes.Dtos.ChildComment;
 using SocialMedia.Classes.Interfaces;
 
@@ -7,7 +6,8 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
+    // [Authorize]
     public class ChildCommentsController(IChildCommentService childCommentService) : ControllerBase
     {
         private readonly string _childCommentNotFoundMsg = "The comment was not found!";
