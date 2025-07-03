@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SocialMedia.Classes.Data;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Data;
+using SocialMedia.Lib.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,14 +70,13 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.None;
-});
-
+// builder.Services.ConfigureApplicationCookie(options =>
+// {
+//    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+//    options.Cookie.SameSite = SameSiteMode.None;
+// });
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
 .AddJwtBearer(options =>
 {
@@ -89,7 +88,7 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"] !)),
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SignInKey"]!)),
     };
     options.IncludeErrorDetails = true;
 });
@@ -108,7 +107,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        _ = policy.WithOrigins("https://localhost:7213")
+        _ = policy.WithOrigins("http://localhost:59553")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();

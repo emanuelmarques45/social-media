@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Classes.Dtos.Post;
-using SocialMedia.Classes.Interfaces;
+using SocialMedia.Lib.Dtos.Post;
+using SocialMedia.Lib.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {

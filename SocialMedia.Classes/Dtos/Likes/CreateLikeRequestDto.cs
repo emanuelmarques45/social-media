@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Classes.Dtos.Likes
+namespace SocialMedia.Lib.Dtos.Likes
 {
     public class CreateLikeRequestDto
     {
         [Required]
-        public int PostId { get; set; }
+        public int TargetId { get; set; }
 
         [Required]
         public string UserId { get; set; } = string.Empty;
+
+        public LikeableType Type { get; set; }
     }
 }

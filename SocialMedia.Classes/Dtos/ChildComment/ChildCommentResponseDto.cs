@@ -1,13 +1,13 @@
-﻿using SocialMedia.Classes.Dtos.User;
-using SocialMedia.Classes.Models;
+﻿using SocialMedia.Lib.Dtos.User;
+using SocialMedia.Lib.Models;
 
-namespace SocialMedia.Classes.Dtos.ChildComment
+namespace SocialMedia.Lib.Dtos.ChildComment
 {
     public class ChildCommentResponseDto
     {
         public int Id { get; set; }
 
-        public required string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Classes.Dtos.Comment
+namespace SocialMedia.Lib.Dtos.Comment
 {
     public class CreateCommentRequestDto
     {

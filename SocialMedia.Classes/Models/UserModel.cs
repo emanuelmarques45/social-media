@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SocialMedia.Classes.Models
+namespace SocialMedia.Lib.Models
 {
     public class UserModel : IdentityUser
     {
@@ -10,7 +10,7 @@ namespace SocialMedia.Classes.Models
 
         public List<PostModel> Posts { get; set; } = [];
 
-        public List<LikeModel> Likes { get; set; } = [];
+        public List<PostLikeModel> Likes { get; set; } = [];
 
         public List<CommentModel> Comments { get; set; } = [];
 

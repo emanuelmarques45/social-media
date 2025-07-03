@@ -1,7 +1,7 @@
-﻿using SocialMedia.Classes.Dtos.Post;
-using SocialMedia.Classes.Models;
+﻿using SocialMedia.Lib.Dtos.Post;
+using SocialMedia.Lib.Models;
 
-namespace SocialMedia.Classes.Mappers
+namespace SocialMedia.Lib.Mappers
 {
     public static class PostMapper
     {
@@ -13,7 +13,7 @@ namespace SocialMedia.Classes.Mappers
                 Content = post.Content,
                 CreatedAt = post.CreatedAt,
                 User = post.User.ToGetRelatedUserResponseDto(),
-                Likes = post.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
+                Likes = post.Likes.Select(l => l.ToPostLikeResponseDto()).ToList(),
                 Comments = post.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
             };
         }

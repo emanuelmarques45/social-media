@@ -1,18 +1,18 @@
-﻿namespace SocialMedia.Classes.Models
+﻿namespace SocialMedia.Lib.Models
 {
     public class PostModel
     {
         public int Id { get; set; }
 
-        public required string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public required string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         public UserModel User { get; set; } = default!;
 
-        public List<LikeModel> Likes { get; set; } = [];
+        public List<PostLikeModel> Likes { get; set; } = [];
 
         public List<CommentModel> Comments { get; set; } = [];
     }

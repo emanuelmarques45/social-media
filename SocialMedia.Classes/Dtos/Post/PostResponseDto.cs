@@ -1,8 +1,8 @@
-﻿using SocialMedia.Classes.Dtos.Comment;
-using SocialMedia.Classes.Dtos.Likes;
-using SocialMedia.Classes.Dtos.User;
+﻿using SocialMedia.Lib.Dtos.Comment;
+using SocialMedia.Lib.Dtos.Likes;
+using SocialMedia.Lib.Dtos.User;
 
-namespace SocialMedia.Classes.Dtos.Post
+namespace SocialMedia.Lib.Dtos.Post
 {
     public class PostResponseDto
     {

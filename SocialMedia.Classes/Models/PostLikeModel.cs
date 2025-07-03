@@ -1,12 +1,12 @@
-﻿namespace SocialMedia.Classes.Models
+﻿namespace SocialMedia.Lib.Models
 {
-    public class LikeModel
+    public class PostLikeModel
     {
         public int Id { get; set; }
 
         public int PostId { get; set; }
 
-        public required string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Classes.Dtos.Likes;
-using SocialMedia.Classes.Interfaces;
+using SocialMedia.Lib.Dtos.Likes;
+using SocialMedia.Lib.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -8,41 +8,38 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
 
     // [Authorize]
-    public class LikesController(ILikeService likeService) : ControllerBase
+    public class LikesController(IPostLikeService postLike) : ControllerBase
     {
         private readonly string _likeNotFoundMsg = "The like was not found!";
 
-        [HttpPost("like-post")]
-        public async Task<IActionResult> LikePostAsync([FromBody] CreateLikeRequestDto likeToCreate)
+        [HttpPost("post")]
+        public async Task<IActionResult> LikePost([FromBody] CreateLikeRequestDto likeToCreate)
         {
-            var createdLike = await likeService.Create(likeToCreate);
+            var response = await postLike.ToggleLike(likeToCreate);
 
-            if (createdLike == null)
+            if (!response.Success)
             {
-                return NotFound("User not found!");
+                return NotFound(response.Errors);
             }
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { createdLike.Id },
-                createdLike);
+                new { response.Data?.Id },
+                response);
         }
 
-        [HttpPost]
-        public IActionResult Create([FromBody] CreateLikeRequestDto likeToCreate) => Ok();
-
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] LikeableType likeType)
         {
-            var likes = await likeService.GetAll();
+            var likes = await postLike.GetAll(likeType);
 
             return Ok(likes);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id, [FromBody] LikeableType likeType)
         {
-            var like = await likeService.GetById(id);
+            var like = await postLike.GetById(id, likeType);
 
             if (like == null)
             {
@@ -50,32 +47,6 @@ namespace SocialMedia.Api.Controllers
             }
 
             return Ok(like);
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateLikeRequestDto likeToUpdate)
-        {
-            var updatedLike = await likeService.Update(likeToUpdate);
-
-            if (updatedLike == null)
-            {
-                return NotFound(_likeNotFoundMsg);
-            }
-
-            return Ok(updatedLike);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var deletedLike = await likeService.Delete(id);
-
-            if (deletedLike == null)
-            {
-                return NotFound(_likeNotFoundMsg);
-            }
-
-            return NoContent();
         }
     }
 }

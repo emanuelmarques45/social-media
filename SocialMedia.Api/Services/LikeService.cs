@@ -1,78 +1,82 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SocialMedia.Api.Repository.ChildComment;
+using SocialMedia.Api.Repository.Comment;
 using SocialMedia.Api.Repository.Likes;
-using SocialMedia.Classes.Dtos.Likes;
-using SocialMedia.Classes.Interfaces;
-using SocialMedia.Classes.Mappers;
-using SocialMedia.Classes.Models;
+using SocialMedia.Api.Repository.Post;
+using SocialMedia.Lib.Dtos.Likes;
+using SocialMedia.Lib.Helpers.ApiResult;
+using SocialMedia.Lib.Interfaces;
+using SocialMedia.Lib.Models;
 
 namespace SocialMedia.Api.Services
 {
     [Service(ServiceLifetime.Scoped)]
-    public class LikeService(ILikeRepository likeRepo, UserManager<UserModel> userManager) : ILikeService
+    public class LikeService(
+        ILikeRepository likeRepository,
+        IPostRepository postRepository,
+        ICommentRepository commentRepository,
+        IChildCommentRepository childCommentRepository,
+        UserManager<UserModel> userManager) : IPostLikeService
     {
-        public async Task<LikeResponseDto?> LikePost(CreateLikeRequestDto likeToCreate)
+        public async Task<List<LikeResponseDto>> GetAll(LikeableType likeType) => await likeRepository.GetAll(likeType);
+
+        public async Task<LikeResponseDto?> GetById(int id, LikeableType likeType) => await likeRepository.GetById(id, likeType);
+
+        public async Task<ApiResult<LikeResponseDto>> ToggleLike(CreateLikeRequestDto likeToCreate)
         {
             var userDb = await userManager.FindByIdAsync(likeToCreate.UserId);
-
             if (userDb == null)
             {
-                return null;
+                return ApiResultReturn.Fail<LikeResponseDto>(["User not found!"]);
             }
 
-            var createdLike = await likeRepo.Create(likeToCreate.ToLikeModel());
-            var createdLikeDto = createdLike.ToGetLikeResponseDto();
-
-            return createdLikeDto;
-        }
-
-        public LikeResponseDto? Create(CreateLikeRequestDto likeToCreate) => new();
-
-        public async Task<List<LikeResponseDto>> GetAll()
-        {
-            var likesDb = await likeRepo.GetAll();
-            var likesDto = likesDb.Select(p => p.ToGetLikeResponseDto()).ToList();
-
-            return likesDto;
-        }
-
-        public async Task<LikeResponseDto?> GetById(int id)
-        {
-            var likeDb = await likeRepo.GetById(id);
-            var likeDto = likeDb?.ToGetLikeResponseDto();
-
-            return likeDto;
-        }
-
-        public async Task<LikeResponseDto?> Update(UpdateLikeRequestDto likeToUpdate)
-        {
-            var likeDb = await likeRepo.GetById(likeToUpdate.Id);
-
-            if (likeDb == null)
+            switch (likeToCreate.Type)
             {
-                return null;
+                case LikeableType.Post:
+                    var postDb = await postRepository.GetById(likeToCreate.TargetId);
+                    if (postDb == null)
+                    {
+                        return ApiResultReturn.Fail<LikeResponseDto>(["Post not found!"]);
+                    }
+
+                    break;
+
+                case LikeableType.Comment:
+                    var commentDb = await commentRepository.GetById(likeToCreate.TargetId);
+                    if (commentDb == null)
+                    {
+                        return ApiResultReturn.Fail<LikeResponseDto>(["Comment not found!"]);
+                    }
+
+                    break;
+
+                case LikeableType.ChildComment:
+                    var childCommentDb = await childCommentRepository.GetById(likeToCreate.TargetId);
+                    if (childCommentDb == null)
+                    {
+                        return ApiResultReturn.Fail<LikeResponseDto>(["Child comment not found!"]);
+                    }
+
+                    break;
+
+                default:
+                    return ApiResultReturn.Fail<LikeResponseDto>(["Invalid like type"]);
             }
 
-            var updatedLike = await likeRepo.Update(likeDb);
-            var updatedLikeDto = updatedLike.ToGetLikeResponseDto();
-
-            return updatedLikeDto;
-        }
-
-        public async Task<LikeResponseDto?> Delete(int id)
-        {
-            var likeDb = await likeRepo.GetById(id);
-
-            if (likeDb == null)
+            var alreadyExists = await likeRepository.Exists(likeToCreate);
+            if (alreadyExists)
             {
-                return null;
+                var deleted = await likeRepository.Delete(likeToCreate);
+                if (!deleted)
+                {
+                    return ApiResultReturn.Fail<LikeResponseDto>(["Could not remove like!"]);
+                }
+
+                return ApiResultReturn.Ok<LikeResponseDto>(new(), "Like removed");
             }
 
-            var deletedLike = await likeRepo.Delete(likeDb);
-            var deletedLikeDto = deletedLike.ToGetLikeResponseDto();
-
-            return deletedLikeDto;
+            var createdLike = await likeRepository.Create(likeToCreate);
+            return ApiResultReturn.Ok(createdLike, "Like added");
         }
-
-        Task<LikeResponseDto?> IDefaultService<LikeResponseDto, CreateLikeRequestDto, UpdateLikeRequestDto>.Create(CreateLikeRequestDto postToCreate) => throw new NotImplementedException();
     }
 }

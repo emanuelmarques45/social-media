@@ -12,8 +12,8 @@ using SocialMedia.Lib.Data;
 namespace SocialMedia.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312194621_Init")]
-    partial class Init
+    [Migration("20250702180803_RenameTableLike")]
+    partial class RenameTableLike
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,7 +224,7 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostLikeModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +250,7 @@ namespace SocialMedia.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLike");
+                    b.ToTable("PostLike");
                 });
 
             modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
@@ -450,7 +450,7 @@ namespace SocialMedia.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostLikeModel", b =>
                 {
                     b.HasOne("SocialMedia.Classes.Models.PostModel", "Post")
                         .WithMany("Likes")

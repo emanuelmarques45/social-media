@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Dtos.Likes;
+using SocialMedia.Lib.Models;
 
-namespace SocialMedia.Classes.Data
+namespace SocialMedia.Lib.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : IdentityDbContext<UserModel>(dbContextOptions)
     {
         public required DbSet<PostModel> Post { get; set; }
 
-        public required DbSet<LikeModel> AppLike { get; set; }
+        public required DbSet<PostLikeModel> PostLike { get; set; }
+
+        public required DbSet<CommentLikeModel> CommentLike { get; set; }
+
+        public required DbSet<ChildCommentLikeModel> ChildCommentLike { get; set; }
 
         public required DbSet<CommentModel> Comment { get; set; }
 
@@ -19,12 +24,6 @@ namespace SocialMedia.Classes.Data
             base.OnModelCreating(builder);
 
             // Adjust to avoid causing multiple delete paths
-            _ = builder.Entity<LikeModel>()
-                .HasOne(l => l.User)
-                .WithMany(u => u.Likes)
-                .HasForeignKey(l => l.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             _ = builder.Entity<CommentModel>()
                   .HasOne(c => c.User)
                   .WithMany(u => u.Comments)
@@ -36,6 +35,24 @@ namespace SocialMedia.Classes.Data
                   .WithMany(u => u.ChildComments)
                   .HasForeignKey(c => c.CommentId)
                   .OnDelete(DeleteBehavior.NoAction);
+
+            _ = builder.Entity<PostLikeModel>()
+                .HasOne(l => l.User)
+                .WithMany(u => u.Likes)
+                .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            _ = builder.Entity<CommentLikeModel>()
+                 .HasOne(l => l.Comment)
+                 .WithMany(c => c.Likes)
+                 .HasForeignKey(l => l.CommentId)
+                 .OnDelete(DeleteBehavior.NoAction);
+
+            _ = builder.Entity<ChildCommentLikeModel>()
+                 .HasOne(l => l.ChildComment)
+                 .WithMany(c => c.Likes)
+                 .HasForeignKey(l => l.ChildCommentId)
+                 .OnDelete(DeleteBehavior.NoAction);
 
             _ = builder.Entity<UserModel>()
                 .ToTable("AppUser")
@@ -53,7 +70,7 @@ namespace SocialMedia.Classes.Data
                 .Property(b => b.CreatedAt)
                 .HasDefaultValueSql("getdate()");
 
-            _ = builder.Entity<LikeModel>()
+            _ = builder.Entity<PostLikeModel>()
               .Property(b => b.CreatedAt)
               .HasDefaultValueSql("getdate()");
 

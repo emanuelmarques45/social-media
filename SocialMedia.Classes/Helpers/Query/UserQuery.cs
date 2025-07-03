@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Classes.Helpers.Query
+﻿namespace SocialMedia.Lib.Helpers.Query
 {
     public class UserQuery : Query
     {

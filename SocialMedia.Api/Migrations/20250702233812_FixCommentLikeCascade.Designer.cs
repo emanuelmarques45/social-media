@@ -12,8 +12,8 @@ using SocialMedia.Lib.Data;
 namespace SocialMedia.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312194621_Init")]
-    partial class Init
+    [Migration("20250702233812_FixCommentLikeCascade")]
+    partial class FixCommentLikeCascade
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,60 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SocialMedia.Classes.Dtos.Likes.ChildCommentLikeModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChildCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChildCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChildCommentLike");
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Dtos.Likes.CommentLikeModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentLike");
+                });
+
             modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
                 {
                     b.Property<int>("Id")
@@ -224,7 +278,7 @@ namespace SocialMedia.Api.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostLikeModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,7 +304,7 @@ namespace SocialMedia.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppLike");
+                    b.ToTable("PostLike");
                 });
 
             modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>
@@ -412,6 +466,44 @@ namespace SocialMedia.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SocialMedia.Classes.Dtos.Likes.ChildCommentLikeModel", b =>
+                {
+                    b.HasOne("SocialMedia.Classes.Models.ChildCommentModel", "ChildComment")
+                        .WithMany("Likes")
+                        .HasForeignKey("ChildCommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChildComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SocialMedia.Classes.Dtos.Likes.CommentLikeModel", b =>
+                {
+                    b.HasOne("SocialMedia.Classes.Models.CommentModel", "Comment")
+                        .WithMany("Likes")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SocialMedia.Classes.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
                 {
                     b.HasOne("SocialMedia.Classes.Models.CommentModel", "Comment")
@@ -450,7 +542,7 @@ namespace SocialMedia.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialMedia.Classes.Models.LikeModel", b =>
+            modelBuilder.Entity("SocialMedia.Classes.Models.PostLikeModel", b =>
                 {
                     b.HasOne("SocialMedia.Classes.Models.PostModel", "Post")
                         .WithMany("Likes")
@@ -495,9 +587,16 @@ namespace SocialMedia.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SocialMedia.Classes.Models.ChildCommentModel", b =>
+                {
+                    b.Navigation("Likes");
+                });
+
             modelBuilder.Entity("SocialMedia.Classes.Models.CommentModel", b =>
                 {
                     b.Navigation("ChildComments");
+
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("SocialMedia.Classes.Models.PostModel", b =>

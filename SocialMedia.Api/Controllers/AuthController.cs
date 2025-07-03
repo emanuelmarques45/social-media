@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Classes.Dtos.User;
-using SocialMedia.Classes.Interfaces;
-using SocialMedia.Classes.Mappers;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Dtos.User;
+using SocialMedia.Lib.Interfaces;
+using SocialMedia.Lib.Models;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -12,19 +11,17 @@ namespace SocialMedia.Api.Controllers
     [ApiController]
     public class AuthController(UserManager<UserModel> userManager, IAuthService authService) : ControllerBase
     {
+        [Authorize]
         [HttpGet("user-claims")]
         public IActionResult GetUserClaims()
         {
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                var userClaims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-                return Ok(userClaims);
-            }
+            var userClaims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
 
-            return Unauthorized();
+            return Ok(userClaims);
         }
 
         [HttpGet("current-user")]
+        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             var user = await authService.GetCurrentUser();
@@ -41,27 +38,14 @@ namespace SocialMedia.Api.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDto)
         {
-            var user = registerDto.ToUserModel();
+            var result = await authService.Register(registerDto);
 
-            var createdUser = await userManager.CreateAsync(user, registerDto.Password);
-
-            if (!createdUser.Succeeded)
+            if (!result.Success)
             {
-                return StatusCode(500, createdUser.Errors);
+                return StatusCode(500, new { result.Errors });
             }
 
-            var createdRole = await userManager.AddToRoleAsync(user, "user");
-
-            if (!createdRole.Succeeded)
-            {
-                return StatusCode(500, createdRole.Errors);
-            }
-
-            // var addToRole = await AssignRole(user.Id, "User");
-            var token = await authService.GenerateAccessToken(user);
-            var response = user.ToAuthResponseDto(token);
-
-            return CreatedAtAction(nameof(Register), new { user.Id }, user.ToGetUserResponseDto());
+            return CreatedAtAction(nameof(Register), new { id = result.Data?.UserName }, result.Data);
         }
 
         [HttpPost("login")]

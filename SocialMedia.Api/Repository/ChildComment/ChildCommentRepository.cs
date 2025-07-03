@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Classes.Data;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Data;
+using SocialMedia.Lib.Models;
 
 namespace SocialMedia.Api.Repository.ChildComment
 {

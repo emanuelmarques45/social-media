@@ -1,4 +1,6 @@
-﻿namespace SocialMedia.Classes.Models
+﻿using SocialMedia.Lib.Dtos.Likes;
+
+namespace SocialMedia.Lib.Models
 {
     public class CommentModel
     {
@@ -17,5 +19,7 @@
         public UserModel User { get; set; } = default!;
 
         public List<ChildCommentModel> ChildComments { get; set; } = [];
+
+        public List<CommentLikeModel> Likes { get; set; } = [];
     }
 }

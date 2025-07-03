@@ -1,7 +1,7 @@
-﻿using SocialMedia.Classes.Dtos.User;
-using SocialMedia.Classes.Models;
+﻿using SocialMedia.Lib.Dtos.User;
+using SocialMedia.Lib.Models;
 
-namespace SocialMedia.Classes.Mappers
+namespace SocialMedia.Lib.Mappers
 {
     public static class UserMapper
     {
@@ -16,7 +16,7 @@ namespace SocialMedia.Classes.Mappers
                 UserName = user.UserName,
                 CreatedAt = user.CreatedAt,
                 Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
-                Likes = user.Likes.Select(l => l.ToGetLikeResponseDto()).ToList(),
+                Likes = user.Likes.Select(l => l.ToPostLikeResponseDto()).ToList(),
                 Comments = user.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
                 Followers = user.Followers.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
                 Followings = user.Followings.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
@@ -29,18 +29,29 @@ namespace SocialMedia.Classes.Mappers
             {
                 Id = user.Id,
                 Name = user.Name,
-                UserName = user.UserName,
+                Username = user.UserName,
+                Email = user.Email,
             };
         }
 
-        public static AuthResponseDto ToAuthResponseDto(this UserModel user, string token)
+        public static LoginResponseDto ToLoginResponseDto(this UserModel user, string token)
         {
-            return new AuthResponseDto
+            return new LoginResponseDto
             {
                 Name = user.Name,
                 Email = user.Email,
                 UserName = user.UserName,
                 Token = token,
+            };
+        }
+
+        public static RegisterResponseDto ToRegisterResponseDto(this UserModel user)
+        {
+            return new RegisterResponseDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                UserName = user.UserName,
             };
         }
 

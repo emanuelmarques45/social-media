@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SocialMedia.Api.Repository.Post;
-using SocialMedia.Classes.Dtos.Post;
-using SocialMedia.Classes.Interfaces;
-using SocialMedia.Classes.Mappers;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Dtos.Post;
+using SocialMedia.Lib.Interfaces;
+using SocialMedia.Lib.Mappers;
+using SocialMedia.Lib.Models;
 
 namespace SocialMedia.Api.Services
 {

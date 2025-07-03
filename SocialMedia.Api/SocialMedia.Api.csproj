@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialMedia.Classes\SocialMedia.Classes.csproj" />
+    <ProjectReference Include="..\SocialMedia.Classes\SocialMedia.Lib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,13 @@
-﻿namespace SocialMedia.Classes.Dtos.User
+﻿namespace SocialMedia.Lib.Dtos.User
 {
     public class RelatedUserResponseDto
     {
-        public required string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public required string UserName { get; set; }
+        public string Username { get; set; } = string.Empty;
+
+        public required string Email { get; set; }
     }
 }

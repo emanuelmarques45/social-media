@@ -3,10 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using SocialMedia.Classes.Dtos.User;
-using SocialMedia.Classes.Interfaces;
-using SocialMedia.Classes.Mappers;
-using SocialMedia.Classes.Models;
+using SocialMedia.Lib.Dtos.User;
+using SocialMedia.Lib.Helpers.ApiResult;
+using SocialMedia.Lib.Interfaces;
+using SocialMedia.Lib.Mappers;
+using SocialMedia.Lib.Models;
 
 namespace SocialMedia.Api.Services
 {
@@ -77,7 +78,28 @@ namespace SocialMedia.Api.Services
             return handler.WriteToken(token);
         }
 
-        public async Task<AuthResponseDto?> Login(LoginRequestDto loginDto)
+        public async Task<ApiResult<RegisterResponseDto>> Register(RegisterRequestDto registerDto)
+        {
+            var user = registerDto.ToUserModel();
+
+            var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!createdUser.Succeeded)
+            {
+                return ApiResultReturn.Fail<RegisterResponseDto>(createdUser.Errors.Select(e => e.Description));
+            }
+
+            var createdRole = await _userManager.AddToRoleAsync(user, "user");
+            if (!createdRole.Succeeded)
+            {
+                return ApiResultReturn.Fail<RegisterResponseDto>(createdRole.Errors.Select(e => e.Description));
+            }
+
+            var response = user.ToRegisterResponseDto();
+            return ApiResultReturn.Ok(response);
+        }
+
+        public async Task<LoginResponseDto?> Login(LoginRequestDto loginDto)
         {
             UserModel? userDb = default!;
 
@@ -94,36 +116,24 @@ namespace SocialMedia.Api.Services
                 return null;
             }
 
-            var result = await _signInManager.PasswordSignInAsync(userDb, loginDto.Password, false, false);
+            var token = await GenerateAccessToken(userDb);
+            var response = userDb.ToLoginResponseDto(token);
 
-            if (result.Succeeded)
-            {
-                var token = await GenerateAccessToken(userDb);
-                var response = userDb.ToAuthResponseDto(token);
-
-                return response;
-            }
-
-            return null;
+            return response;
         }
 
         public async Task Logout() => await _signInManager.SignOutAsync();
 
         public async Task<UserModel?> GetCurrentUser()
         {
-            if (_httpContextAccessor.HttpContext!.User.Identity?.IsAuthenticated == true)
-            {
-                var claims = _httpContextAccessor.HttpContext!.User.Claims;
+            var claims = _httpContextAccessor.HttpContext!.User.Claims;
 
-                var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-                var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+            var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
 
-                var user = await _userManager.FindByNameAsync(username ?? string.Empty) ?? await _userManager.FindByEmailAsync(email ?? string.Empty);
+            var user = await _userManager.FindByNameAsync(username ?? string.Empty) ?? await _userManager.FindByEmailAsync(email ?? string.Empty);
 
-                return user;
-            }
-
-            return null;
+            return user;
         }
     }
 }

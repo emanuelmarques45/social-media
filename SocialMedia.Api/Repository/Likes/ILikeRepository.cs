@@ -1,9 +1,15 @@
-﻿using SocialMedia.Classes.Models;
+﻿using SocialMedia.Lib.Dtos.Likes;
 
 namespace SocialMedia.Api.Repository.Likes
 {
-    public interface ILikeRepository : IDefaultRepository<LikeModel>
+    public interface ILikeRepository
     {
-        Task<LikeModel> LikePost(LikeModel likeToCreate);
+        Task<bool> Exists(CreateLikeRequestDto like);
+
+        Task<LikeResponseDto> Create(CreateLikeRequestDto likeToCreate);
+
+        Task<bool> Delete(CreateLikeRequestDto likeToDelete);
+        Task<List<LikeResponseDto>> GetAll(LikeableType likeType);
+        Task<LikeResponseDto?> GetById(int id, LikeableType likeType);
     }
 }

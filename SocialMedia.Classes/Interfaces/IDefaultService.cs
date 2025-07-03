@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Classes.Interfaces
+﻿namespace SocialMedia.Lib.Interfaces
 {
     public interface IDefaultService<T, TCreate, TUpdate>
     {
