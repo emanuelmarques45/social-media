@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Lib.Dtos.Post;
-using SocialMedia.Lib.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    // [Authorize]
+    [Authorize]
     public class PostsController(IPostService postService) : ControllerBase
     {
         private readonly string _postNotFoundMsg = "The post was not found!";

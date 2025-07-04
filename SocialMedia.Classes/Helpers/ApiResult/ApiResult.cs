@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Lib.Helpers.ApiResult
+﻿namespace SocialMedia.Shared.Helpers.ApiResult
 {
     public class ApiResult<T>
     {

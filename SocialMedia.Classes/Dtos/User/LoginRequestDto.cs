@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Lib.Dtos.User
+namespace SocialMedia.Shared.Dtos.User
 {
     public class LoginRequestDto
     {

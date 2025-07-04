@@ -3,10 +3,10 @@ using SocialMedia.Api.Repository.ChildComment;
 using SocialMedia.Api.Repository.Comment;
 using SocialMedia.Api.Repository.Likes;
 using SocialMedia.Api.Repository.Post;
-using SocialMedia.Lib.Dtos.Likes;
-using SocialMedia.Lib.Helpers.ApiResult;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.Likes;
+using SocialMedia.Shared.Helpers.ApiResult;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Services
 {

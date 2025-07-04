@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Helpers.Query;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Mappers;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Helpers.Query;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Mappers;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -15,8 +15,8 @@ namespace SocialMedia.Api.Controllers
     // [Authorize]
     public class UsersController(
         UserManager<UserModel> userManager,
-        IAuthService authService,
-        RoleManager<IdentityRole> roleManager
+        RoleManager<IdentityRole> roleManager,
+        IAuthService authService
         ) : ControllerBase
     {
         [HttpPost("assign-role")]
@@ -109,7 +109,15 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
+            var currentUser = await authService.GetCurrentUser();
+
+            if (currentUser?.Id != id)
+            {
+                return Unauthorized();
+            }
+
             var user = await userManager.Users
+                        .Include(u => u.Posts)
                         .FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null)
@@ -167,6 +175,20 @@ namespace SocialMedia.Api.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/posts")]
+        public async Task<IActionResult> GetPosts([FromRoute] string id)
+        {
+            var user = await userManager.Users.Include(u => u.Posts)
+                        .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.Posts);
         }
     }
 }

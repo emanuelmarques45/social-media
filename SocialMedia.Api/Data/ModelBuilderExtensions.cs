@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Data
 {

@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Lib.Dtos.User
+﻿namespace SocialMedia.Shared.Dtos.User
 {
     public class LoginResponseDto
     {

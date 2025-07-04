@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SocialMedia.Lib.Data;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Data;
+using SocialMedia.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,7 +107,9 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        _ = policy.WithOrigins("http://localhost:59553")
+        _ = policy.WithOrigins(
+                        builder.Configuration["URL:Client"]
+                        ?? throw new InvalidOperationException("Missing configuration value for 'URL:Client'"))
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();

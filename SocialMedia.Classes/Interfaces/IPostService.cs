@@ -1,6 +1,6 @@
-﻿using SocialMedia.Lib.Dtos.Post;
+﻿using SocialMedia.Shared.Dtos.Post;
 
-namespace SocialMedia.Lib.Interfaces
+namespace SocialMedia.Shared.Interfaces
 {
     public interface IPostService : IDefaultService<PostResponseDto, CreatePostRequestDto, UpdatePostRequestDto>
     {

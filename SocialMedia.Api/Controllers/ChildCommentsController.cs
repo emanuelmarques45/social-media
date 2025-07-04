@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Lib.Dtos.ChildComment;
-using SocialMedia.Lib.Interfaces;
+using SocialMedia.Shared.Dtos.ChildComment;
+using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {

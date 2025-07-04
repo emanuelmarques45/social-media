@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Data;
-using SocialMedia.Lib.Dtos.Likes;
-using SocialMedia.Lib.Mappers;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Data;
+using SocialMedia.Shared.Dtos.Likes;
+using SocialMedia.Shared.Mappers;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Repository.Likes
 {

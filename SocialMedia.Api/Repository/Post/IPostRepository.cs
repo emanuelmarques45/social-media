@@ -1,5 +1,4 @@
-﻿using SocialMedia.Api.Repository;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Repository.Post
 {

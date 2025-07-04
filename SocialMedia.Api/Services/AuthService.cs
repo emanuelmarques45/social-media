@@ -3,11 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Helpers.ApiResult;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Mappers;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Helpers.ApiResult;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Mappers;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Services
 {
@@ -20,7 +20,7 @@ namespace SocialMedia.Api.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SignInManager<UserModel> _signInManager;
 
-        public AuthService(IConfiguration config, UserManager<UserModel> userManager, IHttpContextAccessor httpContext, SignInManager<UserModel> signInManager)
+        public AuthService(IConfiguration config, UserManager<UserModel> userManager, IHttpContextAccessor httpContextAccessor, SignInManager<UserModel> signInManager)
         {
             var signInKey = config["JWT:SignInKey"];
 
@@ -32,7 +32,7 @@ namespace SocialMedia.Api.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signInKey));
             _config = config;
             _userManager = userManager;
-            _httpContextAccessor = httpContext;
+            _httpContextAccessor = httpContextAccessor;
             _signInManager = signInManager;
         }
 

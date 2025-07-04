@@ -1,7 +1,7 @@
-﻿using SocialMedia.Lib.Dtos.Likes;
-using SocialMedia.Lib.Helpers.ApiResult;
+﻿using SocialMedia.Shared.Dtos.Likes;
+using SocialMedia.Shared.Helpers.ApiResult;
 
-namespace SocialMedia.Lib.Interfaces
+namespace SocialMedia.Shared.Interfaces
 {
     public interface IPostLikeService
     {

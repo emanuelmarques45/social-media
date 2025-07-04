@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Lib.Dtos.Post
+namespace SocialMedia.Shared.Dtos.Post
 {
     public class UpdatePostRequestDto
     {

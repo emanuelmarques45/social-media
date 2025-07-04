@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Lib.Models
+﻿namespace SocialMedia.Shared.Models
 {
     public class PostLikeModel
     {

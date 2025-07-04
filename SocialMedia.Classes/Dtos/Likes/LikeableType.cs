@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Lib.Dtos.Likes
+﻿namespace SocialMedia.Shared.Dtos.Likes
 {
     public enum LikeableType
     {

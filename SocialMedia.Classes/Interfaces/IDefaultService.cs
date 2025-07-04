@@ -1,4 +1,6 @@
-﻿namespace SocialMedia.Lib.Interfaces
+﻿using SocialMedia.Shared.Dtos.Post;
+
+namespace SocialMedia.Shared.Interfaces
 {
     public interface IDefaultService<T, TCreate, TUpdate>
     {
@@ -11,5 +13,6 @@
         public Task<T?> Update(TUpdate postToUpdate);
 
         public Task<T?> Delete(int id);
+        Task<List<PostResponseDto>> GetByUserId(string userId);
     }
 }

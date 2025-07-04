@@ -11,11 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Classes", "SocialMedia.Classes\SocialMedia.Classes.csproj", "{02C7B43D-6774-466C-9F4B-B99E5CFE4C05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Shared", "SocialMedia.Classes\SocialMedia.Shared.csproj", "{02C7B43D-6774-466C-9F4B-B99E5CFE4C05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Front", "SocialMedia.Front\SocialMedia.Front\SocialMedia.Front.csproj", "{905DA479-3550-4AFB-B510-E90F797A9D4A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMedia.Front.Client", "SocialMedia.Front\SocialMedia.Front.Client\SocialMedia.Front.Client.csproj", "{45B19944-B70B-48AA-AF8C-3A2533EB23D9}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SocialMedia.Front", "SocialMedia.Front\SocialMedia.Front.esproj", "{D21711E6-88DB-400D-BCF9-F7130752D726}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +29,12 @@ Global
 		{02C7B43D-6774-466C-9F4B-B99E5CFE4C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02C7B43D-6774-466C-9F4B-B99E5CFE4C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02C7B43D-6774-466C-9F4B-B99E5CFE4C05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{905DA479-3550-4AFB-B510-E90F797A9D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{905DA479-3550-4AFB-B510-E90F797A9D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{905DA479-3550-4AFB-B510-E90F797A9D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{905DA479-3550-4AFB-B510-E90F797A9D4A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45B19944-B70B-48AA-AF8C-3A2533EB23D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45B19944-B70B-48AA-AF8C-3A2533EB23D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45B19944-B70B-48AA-AF8C-3A2533EB23D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45B19944-B70B-48AA-AF8C-3A2533EB23D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D21711E6-88DB-400D-BCF9-F7130752D726}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Dtos.Likes;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.Likes;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Data
+namespace SocialMedia.Shared.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : IdentityDbContext<UserModel>(dbContextOptions)
     {

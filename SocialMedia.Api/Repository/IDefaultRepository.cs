@@ -1,4 +1,6 @@
-﻿namespace SocialMedia.Api.Repository
+﻿using SocialMedia.Shared.Models;
+
+namespace SocialMedia.Api.Repository
 {
     public interface IDefaultRepository<T>
     {
@@ -11,5 +13,7 @@
         Task<T> Update(T registerToUpdate);
 
         Task<T> Delete(T registerToDelete);
+
+        Task<List<PostModel>> GetByUserId(string userId);
     }
 }

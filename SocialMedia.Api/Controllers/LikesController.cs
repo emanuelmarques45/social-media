@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Lib.Dtos.Likes;
-using SocialMedia.Lib.Interfaces;
+using SocialMedia.Shared.Dtos.Likes;
+using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {

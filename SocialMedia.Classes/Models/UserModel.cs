@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SocialMedia.Lib.Models
+namespace SocialMedia.Shared.Models
 {
     public class UserModel : IdentityUser
     {

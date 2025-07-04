@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SocialMedia.Api.Repository.Comment;
 using SocialMedia.Api.Repository.Post;
-using SocialMedia.Lib.Dtos.Comment;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Mappers;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.Comment;
+using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Mappers;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Services
 {
@@ -74,5 +75,7 @@ namespace SocialMedia.Api.Services
 
             return deletedCommentDto;
         }
+
+        public Task<List<PostResponseDto>> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

@@ -1,8 +1,8 @@
-﻿using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Helpers.ApiResult;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Helpers.ApiResult;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Interfaces
+namespace SocialMedia.Shared.Interfaces
 {
     public interface IAuthService
     {

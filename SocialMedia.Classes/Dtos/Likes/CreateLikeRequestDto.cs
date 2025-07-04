@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Lib.Dtos.Likes
+namespace SocialMedia.Shared.Dtos.Likes
 {
     public class CreateLikeRequestDto
     {

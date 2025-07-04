@@ -1,7 +1,7 @@
-﻿using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Mappers
+namespace SocialMedia.Shared.Mappers
 {
     public static class UserMapper
     {

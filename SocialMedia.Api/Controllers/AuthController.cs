@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Controllers
 {
@@ -20,7 +20,7 @@ namespace SocialMedia.Api.Controllers
             return Ok(userClaims);
         }
 
-        [HttpGet("current-user")]
+        [HttpGet("me")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {

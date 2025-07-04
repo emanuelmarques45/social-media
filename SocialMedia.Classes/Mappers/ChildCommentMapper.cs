@@ -1,7 +1,7 @@
-﻿using SocialMedia.Lib.Dtos.ChildComment;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Dtos.ChildComment;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Mappers
+namespace SocialMedia.Shared.Mappers
 {
     public static class ChildCommentMapper
     {

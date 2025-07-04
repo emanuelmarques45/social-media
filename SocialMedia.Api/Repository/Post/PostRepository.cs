@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Data;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Data;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Repository.Post
 {
@@ -51,5 +51,7 @@ namespace SocialMedia.Api.Repository.Post
 
             return postToDelete;
         }
+
+        public async Task<List<PostModel>> GetByUserId(string userId) => await context.Post.Where(p => p.UserId == userId).ToListAsync();
     }
 }

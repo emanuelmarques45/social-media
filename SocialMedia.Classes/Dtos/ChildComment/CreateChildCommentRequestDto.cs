@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SocialMedia.Lib.Dtos.ChildComment
+namespace SocialMedia.Shared.Dtos.ChildComment
 {
     public class CreateChildCommentRequestDto
     {

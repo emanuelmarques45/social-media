@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SocialMedia.Api.Repository.Post;
-using SocialMedia.Lib.Dtos.Post;
-using SocialMedia.Lib.Interfaces;
-using SocialMedia.Lib.Mappers;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Interfaces;
+using SocialMedia.Shared.Mappers;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Services
 {
@@ -71,6 +71,14 @@ namespace SocialMedia.Api.Services
             var deletedPostDto = deletedPost.ToGetPostResponseDto();
 
             return deletedPostDto;
+        }
+
+        public async Task<List<PostResponseDto>> GetByUserId(string userId)
+        {
+            var postsDb = await postRepo.GetByUserId(userId);
+            var postsDto = postsDb.Select(p => p.ToGetPostResponseDto()).ToList();
+
+            return postsDto;
         }
     }
 }

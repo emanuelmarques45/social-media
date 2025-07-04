@@ -1,7 +1,7 @@
-﻿using SocialMedia.Lib.Dtos.Post;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Mappers
+namespace SocialMedia.Shared.Mappers
 {
     public static class PostMapper
     {

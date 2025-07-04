@@ -1,6 +1,6 @@
-﻿using SocialMedia.Lib.Dtos.Likes;
+﻿using SocialMedia.Shared.Dtos.Likes;
 
-namespace SocialMedia.Lib.Models
+namespace SocialMedia.Shared.Models
 {
     public class CommentModel
     {

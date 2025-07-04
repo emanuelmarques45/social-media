@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Lib.Data;
-using SocialMedia.Lib.Models;
+using SocialMedia.Shared.Data;
+using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Repository.Comment
 {
@@ -49,5 +49,7 @@ namespace SocialMedia.Api.Repository.Comment
 
             return commentToDelete;
         }
+
+        public Task<List<PostModel>> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

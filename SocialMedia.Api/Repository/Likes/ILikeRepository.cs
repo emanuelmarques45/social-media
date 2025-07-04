@@ -1,4 +1,4 @@
-﻿using SocialMedia.Lib.Dtos.Likes;
+﻿using SocialMedia.Shared.Dtos.Likes;
 
 namespace SocialMedia.Api.Repository.Likes
 {

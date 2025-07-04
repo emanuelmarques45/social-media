@@ -1,6 +1,6 @@
-﻿using SocialMedia.Lib.Dtos.Comment;
+﻿using SocialMedia.Shared.Dtos.Comment;
 
-namespace SocialMedia.Lib.Interfaces
+namespace SocialMedia.Shared.Interfaces
 {
     public interface ICommentService : IDefaultService<CommentResponseDto, CreateCommentRequestDto, UpdateCommentRequestDto>
     {

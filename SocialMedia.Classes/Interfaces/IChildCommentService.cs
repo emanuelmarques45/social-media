@@ -1,6 +1,6 @@
-﻿using SocialMedia.Lib.Dtos.ChildComment;
+﻿using SocialMedia.Shared.Dtos.ChildComment;
 
-namespace SocialMedia.Lib.Interfaces
+namespace SocialMedia.Shared.Interfaces
 {
     public interface IChildCommentService : IDefaultService<ChildCommentResponseDto, CreateChildCommentRequestDto, UpdateChildCommentRequestDto>
     {

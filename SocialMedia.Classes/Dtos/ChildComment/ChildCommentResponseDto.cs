@@ -1,7 +1,7 @@
-﻿using SocialMedia.Lib.Dtos.User;
-using SocialMedia.Lib.Models;
+﻿using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Models;
 
-namespace SocialMedia.Lib.Dtos.ChildComment
+namespace SocialMedia.Shared.Dtos.ChildComment
 {
     public class ChildCommentResponseDto
     {

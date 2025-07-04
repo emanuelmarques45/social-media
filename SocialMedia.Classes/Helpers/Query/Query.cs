@@ -1,4 +1,4 @@
-﻿namespace SocialMedia.Lib.Helpers.Query
+﻿namespace SocialMedia.Shared.Helpers.Query
 {
     public abstract class Query
     {

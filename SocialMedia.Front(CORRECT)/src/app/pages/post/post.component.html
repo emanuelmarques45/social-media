@@ -1,0 +1,46 @@
+<mat-toolbar color="primary">
+    <span>Add Post</span>
+</mat-toolbar>
+
+<mat-card class="add-post-form-card">
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Content</mat-label>
+            <textarea matInput rows="4" placeholder="Digite o conteúdo" formControlName="content"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
+            Add Post
+        </button>
+    </form>
+</mat-card>
+
+<mat-toolbar color="primary">
+    <span>Posts</span>
+</mat-toolbar>
+
+<div *ngFor="let post of posts">
+    <mat-card class="form-card" appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>{{ post.user.username ? post.user.username : post.user.email}}</mat-card-title>
+            <!-- <mat-card-subtitle>{{ post.content }}</mat-card-subtitle> -->
+        </mat-card-header>
+
+        <mat-card-content>
+            <p>{{ post.content }}</p>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-button [class.liked]="isLiked(post)" (click)="likePost(post)">
+                <mat-icon>thumb_up</mat-icon> Like
+            </button>
+            <button mat-button>
+                <mat-icon>share</mat-icon> Share
+            </button>
+            <button *ngIf="post.user.id === currentUserId" mat-button color="warn" (click)="removePost(post.id)">
+                <mat-icon>delete</mat-icon> Delete
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>
