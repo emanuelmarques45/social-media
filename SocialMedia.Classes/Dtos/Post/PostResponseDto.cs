@@ -12,6 +12,10 @@ namespace SocialMedia.Shared.Dtos.Post
 
         public DateTime CreatedAt { get; set; }
 
+        public int LikeCount { get; set; }
+
+        public int CommentCount { get; set; }
+
         public RelatedUserResponseDto User { get; set; } = default!;
 
         public List<LikeResponseDto> Likes { get; set; } = [];

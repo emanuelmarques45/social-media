@@ -303,6 +303,7 @@ dotnet_diagnostic.SA1633.severity = none
 # SA1601: Partial elements should be documented
 dotnet_diagnostic.SA1601.severity = none
 dotnet_diagnostic.ASP0025.severity = none
+dotnet_diagnostic.SA1011.severity = none
 
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line

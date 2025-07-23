@@ -21,8 +21,6 @@ namespace SocialMedia.Api.Repository.Post
 
             return await context.Post.AsNoTracking()
                 .Include(p => p.User)
-                .Include(p => p.Comments)
-                    .ThenInclude(p => p.User)
                 .Include(p => p.Likes)
                 .ToListAsync();
         }

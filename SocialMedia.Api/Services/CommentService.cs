@@ -77,5 +77,13 @@ namespace SocialMedia.Api.Services
         }
 
         public Task<List<PostResponseDto>> GetByUserId(string userId) => throw new NotImplementedException();
+
+        public async Task<List<CommentResponseDto>> GetByPostId(int id)
+        {
+            var commentsDb = await commentRepo.GetByPostId(id);
+            var commentsDto = commentsDb.Select(c => c.ToGetCommentResponseDto()).ToList();
+
+            return commentsDto;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Shared.Dtos.User;
@@ -11,8 +12,7 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    // [Authorize]
+    [Authorize]
     public class UsersController(
         UserManager<UserModel> userManager,
         RoleManager<IdentityRole> roleManager,
@@ -143,7 +143,6 @@ namespace SocialMedia.Api.Controllers
             userDb.Name = userDto.Name;
             userDb.Email = userDto.Email;
             userDb.UserName = userDto.UserName;
-            userDb.PasswordHash = userDto.Password;
 
             var updatedUser = await userManager.UpdateAsync(userDb);
 
@@ -189,6 +188,49 @@ namespace SocialMedia.Api.Controllers
             }
 
             return Ok(user.Posts);
+        }
+
+        [HttpPost("upload-profile-picture")]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var currentUser = await authService.GetCurrentUser();
+
+            if (currentUser == null || string.IsNullOrEmpty(currentUser.Id))
+            {
+                return Unauthorized();
+            }
+
+            var user = await userManager.FindByIdAsync(currentUser.Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            user.ProfilePicture = ms.ToArray();
+            user.ProfilePictureContentType = file.ContentType;
+
+            _ = await userManager.UpdateAsync(user);
+
+            return Ok();
+        }
+
+        [HttpGet("{id}/profile-picture")]
+        public async Task<IActionResult> GetProfilePicture(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null || user.ProfilePicture == null)
+            {
+                return NotFound();
+            }
+
+            return File(user.ProfilePicture, user.ProfilePictureContentType ?? "application/octet-stream");
         }
     }
 }

@@ -1,0 +1,20 @@
+<mat-sidenav-container class="dashboard-container" style="min-height: 20rem;">
+    <mat-sidenav mode="side" opened>
+        <mat-toolbar color="primary">Menu</mat-toolbar>
+        <mat-nav-list>
+            <a mat-list-item routerLink="profile">Profile</a>
+            <a mat-list-item routerLink="feed">Feed</a>
+            <a mat-list-item (click)="logout()">Logout</a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            {{ user.userName || 'User' }}
+        </mat-toolbar>
+
+        <div class="dashboard-content">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

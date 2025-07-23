@@ -1,0 +1,27 @@
+<div class="profile-container">
+    <!-- Foto de perfil -->
+    <img *ngIf="profilePictureUrl" [src]="profilePictureUrl" alt="Profile Picture"
+         width="120" height="120"
+         style="border-radius: 50%; object-fit: cover;" />
+
+    <!-- Upload de imagem -->
+    <div class="upload-section">
+        <input type="file" (change)="onFileSelected($event)" />
+        <button (click)="uploadProfilePicture()" [disabled]="!selectedFile">Upload</button>
+    </div>
+
+    <!-- Formulário de dados do usuário -->
+    <form [formGroup]="profileForm" (ngSubmit)="updateUser()" class="profile-form">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="userName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid">Update</button>
+    </form>
+</div>

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SocialMedia.Shared.Dtos.User;
 using SocialMedia.Shared.Helpers.ApiResult;
@@ -131,7 +132,11 @@ namespace SocialMedia.Api.Services
             var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var username = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
 
-            var user = await _userManager.FindByNameAsync(username ?? string.Empty) ?? await _userManager.FindByEmailAsync(email ?? string.Empty);
+            UserModel? user = null;
+
+            user = await _userManager.Users
+            .Where(u => u.UserName == (username ?? string.Empty) || u.Email == (email ?? string.Empty))
+            .Include(u => u.Posts).FirstOrDefaultAsync();
 
             return user;
         }

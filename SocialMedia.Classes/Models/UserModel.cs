@@ -8,6 +8,10 @@ namespace SocialMedia.Shared.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        public byte[]? ProfilePicture { get; set; }
+
+        public string? ProfilePictureContentType { get; set; }
+
         public List<PostModel> Posts { get; set; } = [];
 
         public List<PostLikeModel> Likes { get; set; } = [];

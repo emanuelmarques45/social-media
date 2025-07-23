@@ -1,37 +1,36 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { Post } from '../../models/post/post.model';
+import { environment } from '@env';
 
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
-  private apiUrl = 'https://localhost/api/posts';
-
   constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.apiUrl);
+  async getPosts(): Promise<Post[]> {
+    return await lastValueFrom(this.http.get<Post[]>(`${environment.apiUrl}/posts?SortBy=CreatedAt&IsDescending=true`));
   }
 
   getPost(id: number): Observable<Post> {
-    return this.http.get<Post>(`${this.apiUrl}/${id}`);
+    return this.http.get<Post>(`${environment.apiUrl}/posts/${id}`);
   }
 
   createPost(post: Post): Observable<Post> {
-    return this.http.post<Post>(this.apiUrl, post);
+    return this.http.post<Post>(`${environment.apiUrl}/posts`, post);
   }
 
   updatePost(post: Post): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${post.id}`, post);
+    return this.http.put<void>(`${environment.apiUrl}/posts/${post.id}`, post);
   }
 
-  deletePost(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  async deletePost(id: number): Promise<void> {
+    return await lastValueFrom(this.http.delete<void>(`${environment.apiUrl}/posts/${id}`));
   }
 
   getUserPosts(userId: string): Observable<Post[]> {
-    return this.http.get<Post[]>(`https://localhost/api/users/${userId}/posts`)
+    return this.http.get<Post[]>(`${environment.apiUrl}/users/${userId}/posts`)
   }
 }

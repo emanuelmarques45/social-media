@@ -1,5 +1,5 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
-import { PostComponent } from './pages/post/post.component';
+import { FeedComponent } from './pages/feed/feed.component';
 
 export const serverRoutes: ServerRoute[] = [
   {

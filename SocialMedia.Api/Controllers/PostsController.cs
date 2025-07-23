@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Helpers.Query;
 using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
@@ -8,7 +9,7 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PostsController(IPostService postService) : ControllerBase
+    public class PostsController(IPostService postService, ICommentService commentService) : ControllerBase
     {
         private readonly string _postNotFoundMsg = "The post was not found!";
 
@@ -29,9 +30,17 @@ namespace SocialMedia.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PostQuery query)
         {
-            var posts = await postService.GetAll();
+            var posts = (await postService.GetAll()).AsQueryable();
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                if (query.SortBy.Equals("CreatedAt", StringComparison.OrdinalIgnoreCase))
+                {
+                    posts = query.IsDescending ? posts.OrderByDescending(p => p.CreatedAt) : posts.OrderBy(p => p.CreatedAt);
+                }
+            }
 
             return Ok(posts);
         }
@@ -73,6 +82,14 @@ namespace SocialMedia.Api.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/comments")]
+        public async Task<IActionResult> GetComments([FromRoute] int id)
+        {
+            var comments = await commentService.GetByPostId(id);
+
+            return Ok(comments);
         }
     }
 }

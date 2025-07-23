@@ -19,8 +19,6 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
-
-                // .Include(c => c.ChildComments)
                 .ToListAsync();
         }
 
@@ -28,8 +26,6 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
-
-                // .Include(c => c.ChildComments)
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -51,5 +47,7 @@ namespace SocialMedia.Api.Repository.Comment
         }
 
         public Task<List<PostModel>> GetByUserId(string userId) => throw new NotImplementedException();
+
+        public async Task<List<CommentModel>> GetByPostId(int id) => await context.Comment.Where(c => c.PostId == id).Include(c => c.User).ToListAsync();
     }
 }

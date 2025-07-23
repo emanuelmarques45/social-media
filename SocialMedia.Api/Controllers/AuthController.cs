@@ -61,7 +61,7 @@ namespace SocialMedia.Api.Controllers
 
             if (response is null)
             {
-                return Unauthorized("Username or password incorrects!");
+                return Unauthorized("UserName or password incorrects!");
             }
 
             return Ok(response);

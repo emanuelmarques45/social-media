@@ -29,7 +29,7 @@ namespace SocialMedia.Shared.Mappers
             {
                 Id = user.Id,
                 Name = user.Name,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
             };
         }

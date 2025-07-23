@@ -17,18 +17,33 @@ import { MatListModule } from '@angular/material/list';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { LoginComponent } from './pages/login/login.component';
 import { authInterceptor } from './interceptors/auth.interceptor';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { PostComponent } from './pages/post/post.component';
+import { FeedComponent } from './pages/feed/feed.component';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { LayoutComponent } from './components/layout/layout.component';
+import { TimeAgoOrDatePipe } from './pipes/time-ago-or-date-pipe';
+import { ConfirmDialogComponent } from './components/dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { ProfileComponent } from './components/profile/profile.component';
+import { Spinner } from './shared/spinner/spinner';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    DashboardComponent,
-    PostComponent
+    FeedComponent,
+    ProfileComponent,
+    LayoutComponent,
+    TimeAgoOrDatePipe,
+    ConfirmDialogComponent,
+    Spinner
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    CommonModule,
 
     MatProgressSpinnerModule,
     MatInputModule,
@@ -39,7 +54,8 @@ import { PostComponent } from './pages/post/post.component';
     MatToolbarModule,
     ReactiveFormsModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule
   ],
   providers: [
     provideAnimationsAsync(),
