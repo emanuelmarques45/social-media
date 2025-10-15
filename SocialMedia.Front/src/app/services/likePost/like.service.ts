@@ -11,6 +11,6 @@ export class PostLikeService {
   constructor(private http: HttpClient) { }
 
   toggleLike(postId: number, userId: string): Observable<PostLike> {
-    return this.http.post<PostLike>(`${environment.apiUrl}/post`, { targetId: postId, userId, likeType: 0 });
+    return this.http.post<PostLike>(`${environment.apiUrl}/likes/post`, { targetId: postId, userId, likeType: 0 });
   }
 }

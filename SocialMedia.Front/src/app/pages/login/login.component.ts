@@ -30,6 +30,7 @@ export class LoginComponent {
         next: () => {
           this.router.navigate(['/'])
           this.isLoading = false;
+          this.authService.getCurrentUser()
         },
         error: err => {
           if (err.status === 401) alert('Invalid email or password');

@@ -14,7 +14,7 @@ export class LayoutComponent {
   constructor(private authService: AuthService) { }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.authService.getCurrentUser();
+    this.user = await this.authService.getCurrentUserValue();
     this.authService.setCurrentUser(this.user);
   }
 

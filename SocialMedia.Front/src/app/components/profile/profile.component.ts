@@ -26,7 +26,7 @@ export class ProfileComponent {
   }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.authService.getCurrentUser();
+    this.user = this.authService.getCurrentUserValue();
     this.profileForm.patchValue({
       userName: this.user.userName,
       email: this.user.email,

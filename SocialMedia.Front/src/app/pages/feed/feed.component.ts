@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { PostComment } from '../../models/comment/comment.model';
 import { environment } from '@env';
+import { CommentsDialogComponent } from '../../components/comments-dialog/comments-dialog.component';
 
 @Component({
   selector: 'app-feed',
@@ -37,7 +38,7 @@ export class FeedComponent implements OnInit {
     this.postForm = this.fb.group({
       content: ['', Validators.required]
     });
-    this.currentUserId = (await this.authService.getCurrentUser()).id;
+    this.currentUserId = (this.authService.getCurrentUserValue()).id;
     this.loadPosts();
   }
 
@@ -117,19 +118,11 @@ export class FeedComponent implements OnInit {
     });
   }
 
-  addComment(post: Post) {
-    const form = this.commentForms[post.id];
-    if (form.invalid) return;
-
-    const commentData = { content: form.value.content, postId: post.id, userId: this.currentUserId };
-
-    this.http.post(`${environment.apiUrl}comments`, commentData).subscribe(() => {
-      form.reset();
-      this.loadPosts();
-    });
-  }
-
   async getComments(post: Post): Promise<void> {
-    post.comments = await lastValueFrom(this.http.get<PostComment[]>(`${environment.apiUrl}posts/${post.id}/comments`));
+    post.comments = await lastValueFrom(this.http.get<PostComment[]>(`${environment.apiUrl}/posts/${post.id}/comments`));
+    this.dialog.open(CommentsDialogComponent, {
+      width: '500px',
+      data: { post },
+    });
   }
 }

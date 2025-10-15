@@ -12,7 +12,7 @@ import { environment } from '@env';
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(credentials: { email: string; password: string }) {
     return this.http
@@ -23,7 +23,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
-  } 
+  }
 
   isLoggedIn(): boolean {
     const token = this.getToken();
@@ -44,8 +44,8 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  async getCurrentUser(): Promise<User> {
-    return await lastValueFrom(this.http.get<User>(`${environment.apiUrl}/auth/me`));
+  async getCurrentUser() {
+    this.currentUserSubject.next(await lastValueFrom(this.http.get<User>(`${environment.apiUrl}/auth/me`)));
   }
 
   setCurrentUser(user: User): void {

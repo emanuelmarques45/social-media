@@ -30,23 +30,16 @@
         <mat-card-content>
             <p>{{ post.content }}</p>
 
-            <div class="comments-section" *ngIf="post.comments?.length">
-                <h4>Comentários:</h4>
-                <mat-list>
-                    <mat-list-item *ngFor="let comment of post.comments">
-                        <strong>{{ comment.user.userName || comment.user.email }}:</strong>
-                        <span style="margin-left: 8px">{{ comment.content }}</span>
-                    </mat-list-item>
-                </mat-list>
-            </div>
+            <!-- <div class="comments-section" *ngIf="post.comments?.length"> -->
+            <!--     <h4>Comentários:</h4> -->
+            <!--     <mat-list> -->
+            <!--         <mat-list-item *ngFor="let comment of post.comments"> -->
+            <!--             <strong>{{ comment.user.userName || comment.user.email }}:</strong> -->
+            <!--             <span style="margin-left: 8px">{{ comment.content }}</span> -->
+            <!--         </mat-list-item> -->
+            <!--     </mat-list> -->
+            <!-- </div> -->
 
-            <!-- Adicionar comentário -->
-            <form [formGroup]="commentForms[post.id]" (ngSubmit)="addComment(post)">
-                <mat-form-field appearance="outline" class="full-width">
-                    <input matInput placeholder="Escreva um comentário..." formControlName="content" />
-                </mat-form-field>
-                <button mat-button type="submit" [disabled]="commentForms[post.id].invalid">Comentar</button>
-            </form>
         </mat-card-content>
 
         <mat-card-actions>

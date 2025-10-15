@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.Comment;
 using SocialMedia.Shared.Interfaces;
 
@@ -6,8 +7,7 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-    // [Authorize]
+    [Authorize]
     public class CommentsController(ICommentService commentService) : ControllerBase
     {
         private readonly string _commentNotFoundMsg = "The comment was not found!";

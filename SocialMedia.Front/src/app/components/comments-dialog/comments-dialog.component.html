@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Comentários</h2>
+
+<mat-dialog-content>
+  <div *ngIf="data.post.comments?.length; else noComments">
+    <mat-list>
+      <mat-list-item *ngFor="let comment of data.post.comments">
+        <strong>{{ comment.user.userName || comment.user.email }}:</strong>
+        <span style="margin-left: 8px">{{ comment.content }}</span>
+        <button *ngIf="showDeleteCommentButton(comment.user.id)" mat-button (click)="deleteComment(comment.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <form [formGroup]="commentForms[data.post.id]" (ngSubmit)="addComment(data.post)">
+    <mat-form-field appearance="outline" class="full-width">
+      <input matInput placeholder="Escreva um comentário..." formControlName="content" />
+    </mat-form-field>
+    <button mat-button type="submit" [disabled]="commentForms[data.post.id].invalid">Comentar</button>
+  </form>
+
+  <ng-template #noComments>
+    <p>Nenhum comentário ainda.</p>
+  </ng-template>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>

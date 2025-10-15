@@ -26,6 +26,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { ProfileComponent } from './components/profile/profile.component';
 import { Spinner } from './shared/spinner/spinner';
+import { CommentsDialogComponent } from './components/comments-dialog/comments-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { Spinner } from './shared/spinner/spinner';
     LayoutComponent,
     TimeAgoOrDatePipe,
     ConfirmDialogComponent,
+    CommentsDialogComponent,
     Spinner
   ],
   imports: [
