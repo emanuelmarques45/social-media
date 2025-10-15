@@ -14,6 +14,6 @@ namespace SocialMedia.Api.Repository
 
         Task<T> Delete(T registerToDelete);
 
-        Task<List<PostModel>> GetByUserId(string userId);
+        Task<List<T>> GetByUserId(string userId);
     }
 }

@@ -1,5 +1,4 @@
-﻿using SocialMedia.Api.Repository;
-using SocialMedia.Shared.Models;
+﻿using SocialMedia.Shared.Models;
 
 namespace SocialMedia.Api.Repository.ChildComment
 {

@@ -19,6 +19,7 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -26,6 +27,7 @@ namespace SocialMedia.Api.Repository.Comment
         {
             return await context.Comment
                 .Include(c => c.User)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -46,8 +48,8 @@ namespace SocialMedia.Api.Repository.Comment
             return commentToDelete;
         }
 
-        public Task<List<PostModel>> GetByUserId(string userId) => throw new NotImplementedException();
+        public async Task<List<CommentModel>> GetByUserId(string userId) => await context.Comment.Where(p => p.UserId == userId).AsNoTracking().ToListAsync();
 
-        public async Task<List<CommentModel>> GetByPostId(int id) => await context.Comment.Where(c => c.PostId == id).Include(c => c.User).ToListAsync();
+        public async Task<List<CommentModel>> GetByPostId(int id) => await context.Comment.AsNoTracking().Where(c => c.PostId == id).Include(c => c.User).ToListAsync();
     }
 }

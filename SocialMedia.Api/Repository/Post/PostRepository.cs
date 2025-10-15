@@ -22,6 +22,7 @@ namespace SocialMedia.Api.Repository.Post
             return await context.Post.AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Likes)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -31,6 +32,7 @@ namespace SocialMedia.Api.Repository.Post
                 .Include(p => p.User)
                 .Include(p => p.Comments)
                 .Include(p => p.Likes)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -50,6 +52,6 @@ namespace SocialMedia.Api.Repository.Post
             return postToDelete;
         }
 
-        public async Task<List<PostModel>> GetByUserId(string userId) => await context.Post.Where(p => p.UserId == userId).ToListAsync();
+        public async Task<List<PostModel>> GetByUserId(string userId) => await context.Post.Where(p => p.UserId == userId).AsNoTracking().ToListAsync();
     }
 }

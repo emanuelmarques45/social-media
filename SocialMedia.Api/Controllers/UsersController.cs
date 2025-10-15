@@ -16,7 +16,9 @@ namespace SocialMedia.Api.Controllers
     public class UsersController(
         UserManager<UserModel> userManager,
         RoleManager<IdentityRole> roleManager,
-        IAuthService authService
+        IAuthService authService,
+        IPostService postService,
+        ICommentService commentService
         ) : ControllerBase
     {
         [HttpPost("assign-role")]
@@ -70,25 +72,22 @@ namespace SocialMedia.Api.Controllers
 
             if (!string.IsNullOrEmpty(query.Email))
             {
-                users = users.Where(u => u.Email.Contains(query.Email));
+                users = users.Where(u => u.Email != null && u.Email.Contains(query.Email));
             }
 
             if (!string.IsNullOrEmpty(query.UserName))
             {
-                users = users.Where(u => u.UserName.Contains(query.UserName));
+                users = users.Where(u => u.UserName != null && u.UserName.Contains(query.UserName));
             }
 
             if (!string.IsNullOrEmpty(query.SortBy))
             {
-                if (query.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                users = query.SortBy.ToLower() switch
                 {
-                    users = query.IsDescending ? users.OrderByDescending(u => u.Name) : users.OrderBy(u => u.Name);
-                }
-
-                if (query.SortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
-                {
-                    users = query.IsDescending ? users.OrderByDescending(u => u.UserName) : users.OrderBy(u => u.UserName);
-                }
+                    nameof(UserModel.Name) => query.IsDescending ? users.OrderByDescending(u => u.Name) : users.OrderBy(u => u.Name),
+                    nameof(UserModel.UserName) => query.IsDescending ? users.OrderByDescending(u => u.UserName) : users.OrderBy(u => u.UserName),
+                    _ => users
+                };
             }
 
             users = users
@@ -116,9 +115,7 @@ namespace SocialMedia.Api.Controllers
                 return Unauthorized();
             }
 
-            var user = await userManager.Users
-                        .Include(u => u.Posts)
-                        .FirstOrDefaultAsync(u => u.Id == id);
+            var user = await userManager.FindByIdAsync(id);
 
             if (user == null)
             {
@@ -179,15 +176,31 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/posts")]
         public async Task<IActionResult> GetPosts([FromRoute] string id)
         {
-            var user = await userManager.Users.Include(u => u.Posts)
-                        .FirstOrDefaultAsync(u => u.Id == id);
+            var user = await userManager.FindByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(user.Posts);
+            var posts = await postService.GetByUserId(id);
+
+            return Ok(posts);
+        }
+
+        [HttpGet("{id}/comments")]
+        public async Task<IActionResult> GetComments([FromRoute] string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var comments = await commentService.GetByUserId(id);
+
+            return Ok(comments);
         }
 
         [HttpPost("upload-profile-picture")]

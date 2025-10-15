@@ -25,13 +25,13 @@ namespace SocialMedia.Api.Repository.Likes
                 case LikeableType.Comment:
                     var commentLike = new CommentLikeModel { UserId = likeToCreate.UserId, CommentId = likeToCreate.TargetId, CreatedAt = DateTime.UtcNow };
                     _ = context.CommentLike.Add(commentLike);
-                    createdLike = commentLike.ToPostLikeResponseDto();
+                    createdLike = commentLike.ToCommentLikeResponseDto();
                     break;
 
                 case LikeableType.ChildComment:
                     var childCommentLike = new ChildCommentLikeModel { UserId = likeToCreate.UserId, ChildCommentId = likeToCreate.TargetId, CreatedAt = DateTime.UtcNow };
                     _ = context.ChildCommentLike.Add(childCommentLike);
-                    createdLike = childCommentLike.ToPostLikeResponseDto();
+                    createdLike = childCommentLike.ToChildCommentLikeResponseDto();
                     break;
 
                 default:
@@ -58,14 +58,14 @@ namespace SocialMedia.Api.Repository.Likes
                     .AsNoTracking()
                     .Include(l => l.User)
                     .Include(l => l.Comment)
-                    .Select(l => l.ToPostLikeResponseDto())
+                    .Select(l => l.ToCommentLikeResponseDto())
                     .ToListAsync(),
 
                 LikeableType.ChildComment => await context.ChildCommentLike
                     .AsNoTracking()
                     .Include(l => l.User)
                     .Include(l => l.ChildComment)
-                    .Select(l => l.ToPostLikeResponseDto())
+                    .Select(l => l.ToChildCommentLikeResponseDto())
                     .ToListAsync(),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(likeType), "Unsupported likeable type")
@@ -84,12 +84,12 @@ namespace SocialMedia.Api.Repository.Likes
                 LikeableType.Comment => (await context.CommentLike
                     .Include(l => l.User)
                     .Include(l => l.Comment)
-                    .FirstOrDefaultAsync(p => p.Id == id))?.ToPostLikeResponseDto(),
+                    .FirstOrDefaultAsync(p => p.Id == id))?.ToCommentLikeResponseDto(),
 
                 LikeableType.ChildComment => (await context.ChildCommentLike
                     .Include(l => l.User)
                     .Include(l => l.ChildComment)
-                    .FirstOrDefaultAsync(p => p.Id == id))?.ToPostLikeResponseDto(),
+                    .FirstOrDefaultAsync(p => p.Id == id))?.ToChildCommentLikeResponseDto(),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(likeType), "Unsupported likeable type")
             };

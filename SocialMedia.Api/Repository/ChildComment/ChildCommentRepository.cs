@@ -19,6 +19,7 @@ namespace SocialMedia.Api.Repository.ChildComment
         {
             return await context.ChildComment
                 .Include(c => c.User)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -26,6 +27,7 @@ namespace SocialMedia.Api.Repository.ChildComment
         {
             return await context.ChildComment
                 .Include(c => c.User)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 

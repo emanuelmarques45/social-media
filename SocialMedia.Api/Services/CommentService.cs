@@ -76,11 +76,17 @@ namespace SocialMedia.Api.Services
             return deletedCommentDto;
         }
 
-        public Task<List<PostResponseDto>> GetByUserId(string userId) => throw new NotImplementedException();
-
-        public async Task<List<CommentResponseDto>> GetByPostId(int id)
+        public async Task<List<CommentResponseDto>> GetByUserId(string userId)
         {
-            var commentsDb = await commentRepo.GetByPostId(id);
+            var commentsDb = await commentRepo.GetByUserId(userId);
+            var commentsDto = commentsDb.Select(c => c.ToGetCommentResponseDto()).ToList();
+
+            return commentsDto;
+        }
+
+        public async Task<List<CommentResponseDto>> GetByPostId(int postId)
+        {
+            var commentsDb = await commentRepo.GetByPostId(postId);
             var commentsDto = commentsDb.Select(c => c.ToGetCommentResponseDto()).ToList();
 
             return commentsDto;

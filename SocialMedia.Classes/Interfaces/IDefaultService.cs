@@ -13,6 +13,6 @@ namespace SocialMedia.Shared.Interfaces
         public Task<T?> Update(TUpdate postToUpdate);
 
         public Task<T?> Delete(int id);
-        Task<List<PostResponseDto>> GetByUserId(string userId);
+        Task<List<T>> GetByUserId(string userId);
     }
 }

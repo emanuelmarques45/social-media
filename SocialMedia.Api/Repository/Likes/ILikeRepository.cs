@@ -9,7 +9,9 @@ namespace SocialMedia.Api.Repository.Likes
         Task<LikeResponseDto> Create(CreateLikeRequestDto likeToCreate);
 
         Task<bool> Delete(CreateLikeRequestDto likeToDelete);
+
         Task<List<LikeResponseDto>> GetAll(LikeableType likeType);
+
         Task<LikeResponseDto?> GetById(int id, LikeableType likeType);
     }
 }

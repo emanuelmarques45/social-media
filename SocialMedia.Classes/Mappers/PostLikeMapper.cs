@@ -15,7 +15,7 @@ namespace SocialMedia.Shared.Mappers
             };
         }
 
-        public static LikeResponseDto ToPostLikeResponseDto(this CommentLikeModel like)
+        public static LikeResponseDto ToCommentLikeResponseDto(this CommentLikeModel like)
         {
             return new LikeResponseDto
             {
@@ -25,7 +25,7 @@ namespace SocialMedia.Shared.Mappers
             };
         }
 
-        public static LikeResponseDto ToPostLikeResponseDto(this ChildCommentLikeModel like)
+        public static LikeResponseDto ToChildCommentLikeResponseDto(this ChildCommentLikeModel like)
         {
             return new LikeResponseDto
             {
