@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Helpers.ApiResult;
 using SocialMedia.Shared.Interfaces;
 using SocialMedia.Shared.Models;
 
@@ -9,10 +9,10 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(UserManager<UserModel> userManager, IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService) : ControllerBase
     {
-        [Authorize]
         [HttpGet("user-claims")]
+        [Authorize]
         public IActionResult GetUserClaims()
         {
             var userClaims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
@@ -26,9 +26,9 @@ namespace SocialMedia.Api.Controllers
         {
             var user = await authService.GetCurrentUser();
 
-            if (user is null)
+            if (user == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail<UserModel>(["User not found"], "Failed to retrieve current user"));
             }
 
             return Ok(user);
@@ -42,26 +42,25 @@ namespace SocialMedia.Api.Controllers
 
             if (!result.Success)
             {
-                return StatusCode(500, new { result.Errors });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { result.Errors });
             }
 
             return CreatedAtAction(nameof(Register), new { id = result.Data?.UserName }, result.Data);
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
         {
-            if (string.IsNullOrEmpty(loginDto.Email) && string.IsNullOrEmpty(loginDto.UserName))
+            if (string.IsNullOrWhiteSpace(loginDto.Email) && string.IsNullOrWhiteSpace(loginDto.UserName))
             {
                 return BadRequest("Please provide an email or username!");
             }
 
             var response = await authService.Login(loginDto);
 
-            if (response is null)
+            if (!response.Success)
             {
-                return Unauthorized("UserName or password incorrects!");
+                return Unauthorized(response);
             }
 
             return Ok(response);

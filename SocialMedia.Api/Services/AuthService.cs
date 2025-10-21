@@ -25,7 +25,7 @@ namespace SocialMedia.Api.Services
         {
             var signInKey = config["JWT:SignInKey"];
 
-            if (string.IsNullOrEmpty(signInKey))
+            if (string.IsNullOrWhiteSpace(signInKey))
             {
                 throw new ArgumentNullException("JWT:SignInKey", "JWT Sign-In Key is not set in the _configuration.");
             }
@@ -100,27 +100,27 @@ namespace SocialMedia.Api.Services
             return ApiResultReturn.Ok(response);
         }
 
-        public async Task<LoginResponseDto?> Login(LoginRequestDto loginDto)
+        public async Task<ApiResult<LoginResponseDto>> Login(LoginRequestDto loginDto)
         {
             UserModel? userDb = default!;
 
-            if (!string.IsNullOrEmpty(loginDto.Email))
+            if (!string.IsNullOrWhiteSpace(loginDto.Email))
             {
                 userDb = await _userManager.FindByEmailAsync(loginDto.Email);
-            } else if (!string.IsNullOrEmpty(loginDto.UserName))
+            } else if (!string.IsNullOrWhiteSpace(loginDto.UserName))
             {
                 userDb = await _userManager.FindByNameAsync(loginDto.UserName);
             }
 
-            if (userDb is null || !(await _signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
+            if (userDb == null || !(await _signInManager.CheckPasswordSignInAsync(userDb, loginDto.Password, false)).Succeeded)
             {
-                return null;
+                return ApiResultReturn.Fail<LoginResponseDto>(["Invalid username or password."], "Login failed.");
             }
 
             var token = await GenerateAccessToken(userDb);
             var response = userDb.ToLoginResponseDto(token);
 
-            return response;
+            return ApiResultReturn.Ok(response, "Login successful.");
         }
 
         public async Task Logout() => await _signInManager.SignOutAsync();

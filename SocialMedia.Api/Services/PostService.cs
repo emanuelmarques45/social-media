@@ -20,7 +20,7 @@ namespace SocialMedia.Api.Services
             }
 
             var createdPost = await postRepo.Create(postToCreate.ToPostModel());
-            var createdPostDto = createdPost.ToGetPostResponseDto();
+            var createdPostDto = createdPost.ToPostResponseDto();
 
             return createdPostDto;
         }
@@ -28,7 +28,7 @@ namespace SocialMedia.Api.Services
         public async Task<List<PostResponseDto>> GetAll()
         {
             var postsDb = await postRepo.GetAll();
-            var postsDto = postsDb.Select(p => p.ToGetPostResponseDto()).ToList();
+            var postsDto = postsDb.Select(p => p.ToPostResponseDto()).ToList();
 
             return postsDto;
         }
@@ -36,7 +36,7 @@ namespace SocialMedia.Api.Services
         public async Task<PostResponseDto?> GetById(int id)
         {
             var postDb = await postRepo.GetById(id);
-            var postDto = postDb?.ToGetPostResponseDto();
+            var postDto = postDb?.ToPostResponseDto();
 
             return postDto;
         }
@@ -53,7 +53,7 @@ namespace SocialMedia.Api.Services
             postDb.Content = postToUpdate.Content;
 
             var updatedPost = await postRepo.Update(postDb);
-            var updatedPostDto = updatedPost.ToGetPostResponseDto();
+            var updatedPostDto = updatedPost.ToPostResponseDto();
 
             return updatedPostDto;
         }
@@ -68,7 +68,7 @@ namespace SocialMedia.Api.Services
             }
 
             var deletedPost = await postRepo.Delete(postDb);
-            var deletedPostDto = deletedPost.ToGetPostResponseDto();
+            var deletedPostDto = deletedPost.ToPostResponseDto();
 
             return deletedPostDto;
         }
@@ -76,7 +76,7 @@ namespace SocialMedia.Api.Services
         public async Task<List<PostResponseDto>> GetByUserId(string userId)
         {
             var postsDb = await postRepo.GetByUserId(userId);
-            var postsDto = postsDb.Select(p => p.ToGetPostResponseDto()).ToList();
+            var postsDto = postsDb.Select(p => p.ToPostResponseDto()).ToList();
 
             return postsDto;
         }

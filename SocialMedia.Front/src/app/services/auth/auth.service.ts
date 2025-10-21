@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, lastValueFrom, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from '../models/user/user.model';
+import { User } from '../../models/user/user.model';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '@env';
 

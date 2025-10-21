@@ -8,7 +8,7 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class PostsController(IPostService postService, ICommentService commentService) : ControllerBase
     {
         private readonly string _postNotFoundMsg = "The post was not found!";
@@ -34,13 +34,22 @@ namespace SocialMedia.Api.Controllers
         {
             var posts = (await postService.GetAll()).AsQueryable();
 
-            if (!string.IsNullOrEmpty(query.SortBy))
+            if (!string.IsNullOrEmpty(query.Content))
             {
-                if (query.SortBy.Equals("CreatedAt", StringComparison.OrdinalIgnoreCase))
-                {
-                    posts = query.IsDescending ? posts.OrderByDescending(p => p.CreatedAt) : posts.OrderBy(p => p.CreatedAt);
-                }
+                posts = posts.Where(p => p.Content.Contains(query.Content));
             }
+
+            if (query.CreatedAtStart != null)
+            {
+                posts = posts.Where(p => p.CreatedAt >= query.CreatedAtStart);
+            }
+
+            if (query.CreatedAtEnd != null)
+            {
+                posts = posts.Where(p => p.CreatedAt <= query.CreatedAtEnd);
+            }
+
+            posts = posts.ApplySorting(query.SortBy, query.IsDescending).ApplyPagination(query);
 
             return Ok(posts);
         }

@@ -1,60 +1,78 @@
 <mat-toolbar color="primary">
-    <span>Add Post</span>
+  <span>Add Post</span>
 </mat-toolbar>
 
 <mat-card class="add-post-form-card">
-    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Content</mat-label>
-            <textarea matInput rows="4" placeholder="Digite o conteúdo" formControlName="content"></textarea>
-        </mat-form-field>
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Content</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        placeholder="Digite o conteúdo"
+        formControlName="content"
+      ></textarea>
+    </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
-            Add Post
-        </button>
-    </form>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="postForm.invalid"
+    >
+      Add Post
+    </button>
+  </form>
 </mat-card>
 
 <mat-toolbar color="primary">
-    <span>Posts</span>
+  <span>Posts</span>
 </mat-toolbar>
 
 <div *ngFor="let post of posts">
-    <mat-card class="form-card" appearance="outlined">
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>{{ post.user.userName ? post.user.userName : post.user.email}}</mat-card-title>
-            <mat-card-subtitle>{{ post.createdAt | timeAgoOrDate }}</mat-card-subtitle>
-        </mat-card-header>
+  <mat-card class="form-card" appearance="outlined">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>{{
+        post.user.userName ? post.user.userName : post.user.email
+      }}</mat-card-title>
+      <mat-card-subtitle>{{
+        post.createdAt | timeAgoOrDate
+      }}</mat-card-subtitle>
+    </mat-card-header>
 
-        <mat-card-content>
-            <p>{{ post.content }}</p>
+    <mat-card-content>
+      <p>{{ post.content }}</p>
 
-            <!-- <div class="comments-section" *ngIf="post.comments?.length"> -->
-            <!--     <h4>Comentários:</h4> -->
-            <!--     <mat-list> -->
-            <!--         <mat-list-item *ngFor="let comment of post.comments"> -->
-            <!--             <strong>{{ comment.user.userName || comment.user.email }}:</strong> -->
-            <!--             <span style="margin-left: 8px">{{ comment.content }}</span> -->
-            <!--         </mat-list-item> -->
-            <!--     </mat-list> -->
-            <!-- </div> -->
+      <!-- <div class="comments-section" *ngIf="post.comments?.length"> -->
+      <!--     <h4>Comentários:</h4> -->
+      <!--     <mat-list> -->
+      <!--         <mat-list-item *ngFor="let comment of post.comments"> -->
+      <!--             <strong>{{ comment.user.userName || comment.user.email }}:</strong> -->
+      <!--             <span style="margin-left: 8px">{{ comment.content }}</span> -->
+      <!--         </mat-list-item> -->
+      <!--     </mat-list> -->
+      <!-- </div> -->
+    </mat-card-content>
 
-        </mat-card-content>
-
-        <mat-card-actions>
-            <button mat-button [class.liked]="isLiked(post)" (click)="likePost(post)">
-                <mat-icon>thumb_up</mat-icon> Like
-            </button>
-            <button mat-button (click)="getComments(post)">
-                <mat-icon>comment</mat-icon> Comments
-            </button>
-            <!-- <button mat-button>
+    <mat-card-actions>
+      <button mat-button [class.liked]="isLiked(post)" (click)="likePost(post)">
+        <mat-icon>thumb_up</mat-icon> Like
+      </button>
+      <button mat-button (click)="getComments(post)">
+        <mat-icon>comment</mat-icon> Comments
+      </button>
+      <!-- <button mat-button>
                 <mat-icon>share</mat-icon> Share
             </button> -->
-            <button *ngIf="post.user.id === currentUserId" mat-button color="warn" (click)="removePost(post.id)">
-                <mat-icon>delete</mat-icon> Delete
-            </button>
-        </mat-card-actions>
-    </mat-card>
+      <button
+        *ngIf="post.user.id === currentUserId"
+        mat-button
+        color="warn"
+        (click)="removePost(post.id)"
+      >
+        <mat-icon>delete</mat-icon> Delete
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>

@@ -5,7 +5,7 @@ namespace SocialMedia.Shared.Mappers
 {
     public static class PostMapper
     {
-        public static PostResponseDto ToGetPostResponseDto(this PostModel post)
+        public static PostResponseDto ToPostResponseDto(this PostModel post)
         {
             return new PostResponseDto
             {
@@ -14,7 +14,7 @@ namespace SocialMedia.Shared.Mappers
                 CreatedAt = post.CreatedAt,
                 User = post.User.ToGetRelatedUserResponseDto(),
                 Likes = post.Likes.Select(l => l.ToPostLikeResponseDto()).ToList(),
-                Comments = post.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
+                Comments = post.Comments.Select(c => c.ToCommentResponseDto()).ToList(),
                 CommentCount = post.Comments.Count,
                 LikeCount = post.Likes.Count,
             };

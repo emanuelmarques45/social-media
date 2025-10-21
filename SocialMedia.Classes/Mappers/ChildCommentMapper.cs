@@ -5,7 +5,7 @@ namespace SocialMedia.Shared.Mappers
 {
     public static class ChildCommentMapper
     {
-        public static ChildCommentResponseDto ToGetChildCommentResponseDto(this ChildCommentModel childComment)
+        public static ChildCommentResponseDto ToChildCommentResponseDto(this ChildCommentModel childComment)
         {
             return new ChildCommentResponseDto
             {

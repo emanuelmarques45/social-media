@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialMedia.Shared.Dtos.User;
+using SocialMedia.Shared.Helpers.ApiResult;
 using SocialMedia.Shared.Helpers.Query;
 using SocialMedia.Shared.Interfaces;
 using SocialMedia.Shared.Mappers;
@@ -12,7 +13,7 @@ namespace SocialMedia.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class UsersController(
         UserManager<UserModel> userManager,
         RoleManager<IdentityRole> roleManager,
@@ -30,17 +31,17 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to assign role"));
             }
 
             var createdRole = await userManager.AddToRoleAsync(userDb, roleName);
 
             if (!createdRole.Succeeded)
             {
-                return StatusCode(500, createdRole.Errors);
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResultReturn.Fail(createdRole.Errors.Select(e => e.Description), "Failed to assign role"));
             }
 
-            return Ok("Role added successfully!");
+            return Ok(ApiResultReturn.Ok("Role added successfully!"));
         }
 
         [HttpPost("create-role")]
@@ -50,11 +51,12 @@ namespace SocialMedia.Api.Controllers
         {
             if (await roleManager.RoleExistsAsync(roleName))
             {
-                return StatusCode(409, "This role already exists!");
+                return StatusCode(StatusCodes.Status409Conflict, ApiResultReturn.Fail(["Role already exists"], "Failed to create role"));
             }
 
             _ = await roleManager.CreateAsync(new IdentityRole(roleName));
 
+            // return CreatedAtAction(nameof(GetRoleByName), new { roleName = roleName }, ApiResultReturn.Ok($"Role '{roleName}' created successfully."));
             return Created();
         }
 
@@ -65,30 +67,22 @@ namespace SocialMedia.Api.Controllers
         {
             var users = userManager.Users;
 
-            if (!string.IsNullOrEmpty(query.Name))
+            if (!string.IsNullOrWhiteSpace(query.Name))
             {
                 users = users.Where(u => u.Name.Contains(query.Name));
             }
 
-            if (!string.IsNullOrEmpty(query.Email))
+            if (!string.IsNullOrWhiteSpace(query.Email))
             {
                 users = users.Where(u => u.Email != null && u.Email.Contains(query.Email));
             }
 
-            if (!string.IsNullOrEmpty(query.UserName))
+            if (!string.IsNullOrWhiteSpace(query.UserName))
             {
                 users = users.Where(u => u.UserName != null && u.UserName.Contains(query.UserName));
             }
 
-            if (!string.IsNullOrEmpty(query.SortBy))
-            {
-                users = query.SortBy.ToLower() switch
-                {
-                    nameof(UserModel.Name) => query.IsDescending ? users.OrderByDescending(u => u.Name) : users.OrderBy(u => u.Name),
-                    nameof(UserModel.UserName) => query.IsDescending ? users.OrderByDescending(u => u.UserName) : users.OrderBy(u => u.UserName),
-                    _ => users
-                };
-            }
+            users = users.ApplySorting(query.SortBy, query.IsDescending).ApplyPagination(query);
 
             users = users
                 .Include(u => u.Posts)
@@ -96,13 +90,11 @@ namespace SocialMedia.Api.Controllers
                 .Include(u => u.Comments)
                 .Include(u => u.Followers)
                 .Include(u => u.Followings)
-                .Skip(query.SkipNumber)
-                .Take(query.PageSize)
                 .AsSingleQuery();
 
             var usersDto = await users.Select(u => u.ToGetUserResponseDto()).ToListAsync();
 
-            return Ok(usersDto);
+            return Ok(ApiResultReturn.Ok(usersDto));
         }
 
         [HttpGet("{id}")]
@@ -115,40 +107,53 @@ namespace SocialMedia.Api.Controllers
                 return Unauthorized();
             }
 
-            var user = await userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
-            if (user == null)
+            if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get user"));
             }
 
-            var userDto = user.ToGetUserResponseDto();
+            var userDto = userDb.ToGetUserResponseDto();
 
-            return Ok(userDto);
+            return Ok(ApiResultReturn.Ok(userDto));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateUserRequestDto userDto)
+        public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateUserRequestDto userToUpdate)
         {
             var userDb = await userManager.FindByIdAsync(id);
 
             if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to update user"));
             }
 
-            userDb.Name = userDto.Name;
-            userDb.Email = userDto.Email;
-            userDb.UserName = userDto.UserName;
+            if (!string.IsNullOrWhiteSpace(userToUpdate.Name))
+            {
+                userDb.Name = userToUpdate.Name;
+            }
+
+            if (!string.IsNullOrWhiteSpace(userToUpdate.Email))
+            {
+                userDb.Email = userToUpdate.Email;
+            }
+
+            if (!string.IsNullOrWhiteSpace(userToUpdate.UserName))
+            {
+                userDb.UserName = userToUpdate.UserName;
+            }
 
             var updatedUser = await userManager.UpdateAsync(userDb);
 
             if (!updatedUser.Succeeded)
             {
-                return StatusCode(500, updatedUser.Errors);
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResultReturn.Fail(updatedUser.Errors.Select(e => e.Description), "Failed to update user"));
             }
 
-            return Ok(userDb.ToGetUserResponseDto());
+            var userDto = userDb.ToGetUserResponseDto();
+
+            return Ok(ApiResultReturn.Ok(userDto, "User updated successfully."));
         }
 
         [HttpDelete("{id}")]
@@ -160,14 +165,14 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to delete user"));
             }
 
             var deletedUser = await userManager.DeleteAsync(userDb);
 
             if (!deletedUser.Succeeded)
             {
-                return StatusCode(500, deletedUser.Errors);
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResultReturn.Fail(deletedUser.Errors.Select(e => e.Description), "Failed to delete user"));
             }
 
             return NoContent();
@@ -176,31 +181,31 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/posts")]
         public async Task<IActionResult> GetPosts([FromRoute] string id)
         {
-            var user = await userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
-            if (user == null)
+            if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get posts"));
             }
 
             var posts = await postService.GetByUserId(id);
 
-            return Ok(posts);
+            return Ok(ApiResultReturn.Ok(posts));
         }
 
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetComments([FromRoute] string id)
         {
-            var user = await userManager.FindByIdAsync(id);
+            var userDb = await userManager.FindByIdAsync(id);
 
-            if (user == null)
+            if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get comments"));
             }
 
             var comments = await commentService.GetByUserId(id);
 
-            return Ok(comments);
+            return Ok(ApiResultReturn.Ok(comments));
         }
 
         [HttpPost("upload-profile-picture")]
@@ -208,28 +213,28 @@ namespace SocialMedia.Api.Controllers
         {
             if (file == null || file.Length == 0)
             {
-                return BadRequest("No file uploaded.");
+                return BadRequest(ApiResultReturn.Fail(["No file uploaded"], "Failed to upload profile picture"));
             }
 
             var currentUser = await authService.GetCurrentUser();
 
-            if (currentUser == null || string.IsNullOrEmpty(currentUser.Id))
+            if (currentUser == null || string.IsNullOrWhiteSpace(currentUser.Id))
             {
                 return Unauthorized();
             }
 
-            var user = await userManager.FindByIdAsync(currentUser.Id);
-            if (user == null)
+            var userDb = await userManager.FindByIdAsync(currentUser.Id);
+            if (userDb == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to upload profile picture"));
             }
 
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
-            user.ProfilePicture = ms.ToArray();
-            user.ProfilePictureContentType = file.ContentType;
+            userDb.ProfilePicture = ms.ToArray();
+            userDb.ProfilePictureContentType = file.ContentType;
 
-            _ = await userManager.UpdateAsync(user);
+            _ = await userManager.UpdateAsync(userDb);
 
             return Ok();
         }
@@ -237,13 +242,48 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/profile-picture")]
         public async Task<IActionResult> GetProfilePicture(string id)
         {
-            var user = await userManager.FindByIdAsync(id);
-            if (user == null || user.ProfilePicture == null)
+            var userDb = await userManager.FindByIdAsync(id);
+
+            if (userDb == null || userDb.ProfilePicture == null)
             {
-                return NotFound();
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get profile picture"));
             }
 
-            return File(user.ProfilePicture, user.ProfilePictureContentType ?? "application/octet-stream");
+            return File(userDb.ProfilePicture, userDb.ProfilePictureContentType ?? "application/octet-stream");
+        }
+
+        [HttpGet("{id}/followers")]
+        public async Task<IActionResult> GetFollowers([FromRoute] string id)
+        {
+            var userDb = await userManager.FindByIdAsync(id);
+
+            if (userDb == null)
+            {
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get followers"));
+            }
+
+            var followers = await userManager.Users.Where(u => u.Followings.Any(f => f.Id == id))
+                .Select(u => u.ToGetUserResponseDto())
+                .ToListAsync();
+
+            return Ok(ApiResultReturn.Ok(followers));
+        }
+
+        [HttpGet("{id}/followings")]
+        public async Task<IActionResult> GetFollowings([FromRoute] string id)
+        {
+            var userDb = await userManager.FindByIdAsync(id);
+
+            if (userDb == null)
+            {
+                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get followings"));
+            }
+
+            var followings = await userManager.Users.Where(u => u.Followers.Any(f => f.Id == id))
+                .Select(u => u.ToGetUserResponseDto())
+                .ToListAsync();
+
+            return Ok(ApiResultReturn.Ok(followings));
         }
     }
 }

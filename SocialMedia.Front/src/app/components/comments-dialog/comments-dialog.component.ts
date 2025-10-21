@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Post } from '../../models/post/post.model';
 import { HttpClient } from '@angular/common/http';
 import { PostComment } from '../../models/comment/comment.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { lastValueFrom } from 'rxjs';
 
 @Component({

@@ -19,7 +19,7 @@ namespace SocialMedia.Api.Repository.Post
         {
             await using var context = await contextFactory.CreateDbContextAsync();
 
-            return await context.Post.AsNoTracking()
+            return await context.Post
                 .Include(p => p.User)
                 .Include(p => p.Likes)
                 .AsNoTracking()

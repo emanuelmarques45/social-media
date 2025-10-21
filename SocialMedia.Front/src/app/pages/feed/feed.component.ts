@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostLikeService } from '../../services/likePost/like.service';
 import { PostLike } from '../../models/like/like.model';
 import { Post } from '../../models/post/post.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { lastValueFrom } from 'rxjs';
 import { ConfirmDialogComponent } from '../../components/dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';

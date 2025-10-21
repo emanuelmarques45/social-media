@@ -1,6 +1,4 @@
-﻿using SocialMedia.Shared.Dtos.Post;
-
-namespace SocialMedia.Shared.Interfaces
+﻿namespace SocialMedia.Shared.Interfaces
 {
     public interface IDefaultService<T, TCreate, TUpdate>
     {
@@ -13,6 +11,7 @@ namespace SocialMedia.Shared.Interfaces
         public Task<T?> Update(TUpdate postToUpdate);
 
         public Task<T?> Delete(int id);
-        Task<List<T>> GetByUserId(string userId);
+
+        public Task<List<T>> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

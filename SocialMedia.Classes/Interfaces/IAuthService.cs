@@ -10,7 +10,7 @@ namespace SocialMedia.Shared.Interfaces
 
         public Task<ApiResult<RegisterResponseDto>> Register(RegisterRequestDto registerDto);
 
-        public Task<LoginResponseDto?> Login(LoginRequestDto loginDto);
+        public Task<ApiResult<LoginResponseDto>> Login(LoginRequestDto loginDto);
 
         public Task Logout();
 

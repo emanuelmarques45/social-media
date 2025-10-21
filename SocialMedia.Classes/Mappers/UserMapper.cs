@@ -15,11 +15,11 @@ namespace SocialMedia.Shared.Mappers
                 EmailConfirmed = user.EmailConfirmed,
                 UserName = user.UserName,
                 CreatedAt = user.CreatedAt,
-                Posts = user.Posts.Select(p => p.ToGetPostResponseDto()).ToList(),
+                Posts = user.Posts.Select(p => p.ToPostResponseDto()).ToList(),
                 Likes = user.Likes.Select(l => l.ToPostLikeResponseDto()).ToList(),
-                Comments = user.Comments.Select(c => c.ToGetCommentResponseDto()).ToList(),
-                Followers = user.Followers.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
-                Followings = user.Followings.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
+                Comments = user.Comments.Select(c => c.ToCommentResponseDto()).ToList(),
+                // Followers = user.Followers.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
+                // Followings = user.Followings.Select(f => f.ToGetRelatedUserResponseDto()).ToList(),
             };
         }
 

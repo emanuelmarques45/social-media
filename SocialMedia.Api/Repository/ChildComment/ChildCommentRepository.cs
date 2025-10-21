@@ -47,6 +47,6 @@ namespace SocialMedia.Api.Repository.ChildComment
             return childCommentToDelete;
         }
 
-        public Task<List<PostModel>> GetByUserId(string userId) => throw new NotImplementedException();
+        public Task<List<ChildCommentModel>> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

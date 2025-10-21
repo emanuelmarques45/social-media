@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { delay } from '../../utils/delay';
 
@@ -35,6 +35,7 @@ export class LoginComponent {
         error: err => {
           if (err.status === 401) alert('Invalid email or password');
           else alert('Unexpected error, please try again.');
+          console.log(err)
           this.isLoading = false;
         }
       });

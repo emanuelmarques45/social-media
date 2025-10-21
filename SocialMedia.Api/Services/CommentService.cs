@@ -23,7 +23,7 @@ namespace SocialMedia.Api.Services
             }
 
             var createdComment = await commentRepo.Create(commentToCreate.ToCommentModel());
-            var createdCommentDto = createdComment.ToGetCommentResponseDto();
+            var createdCommentDto = createdComment.ToCommentResponseDto();
 
             return createdCommentDto;
         }
@@ -31,7 +31,7 @@ namespace SocialMedia.Api.Services
         public async Task<List<CommentResponseDto>> GetAll()
         {
             var commentsDb = await commentRepo.GetAll();
-            var commentsDto = commentsDb.Select(p => p.ToGetCommentResponseDto()).ToList();
+            var commentsDto = commentsDb.Select(p => p.ToCommentResponseDto()).ToList();
 
             return commentsDto;
         }
@@ -39,7 +39,7 @@ namespace SocialMedia.Api.Services
         public async Task<CommentResponseDto?> GetById(int id)
         {
             var commentDb = await commentRepo.GetById(id);
-            var commentDto = commentDb?.ToGetCommentResponseDto();
+            var commentDto = commentDb?.ToCommentResponseDto();
 
             return commentDto;
         }
@@ -56,7 +56,7 @@ namespace SocialMedia.Api.Services
             commentDb.Content = commentToUpdate.Content;
 
             var updatedComment = await commentRepo.Update(commentDb);
-            var updatedCommentDto = updatedComment.ToGetCommentResponseDto();
+            var updatedCommentDto = updatedComment.ToCommentResponseDto();
 
             return updatedCommentDto;
         }
@@ -71,15 +71,15 @@ namespace SocialMedia.Api.Services
             }
 
             var deletedComment = await commentRepo.Delete(commentDb);
-            var deletedCommentDto = deletedComment.ToGetCommentResponseDto();
+            var deletedCommentDto = deletedComment.ToCommentResponseDto();
 
             return deletedCommentDto;
         }
 
-        public async Task<List<CommentResponseDto>> GetByUserId(string userId)
+        public async Task<List<UserCommentResponseDto>> GetByUserId(string userId)
         {
             var commentsDb = await commentRepo.GetByUserId(userId);
-            var commentsDto = commentsDb.Select(c => c.ToGetCommentResponseDto()).ToList();
+            var commentsDto = commentsDb.Select(c => c.ToUserCommentResponseDto()).ToList();
 
             return commentsDto;
         }
@@ -87,7 +87,7 @@ namespace SocialMedia.Api.Services
         public async Task<List<CommentResponseDto>> GetByPostId(int postId)
         {
             var commentsDb = await commentRepo.GetByPostId(postId);
-            var commentsDto = commentsDb.Select(c => c.ToGetCommentResponseDto()).ToList();
+            var commentsDto = commentsDb.Select(c => c.ToCommentResponseDto()).ToList();
 
             return commentsDto;
         }

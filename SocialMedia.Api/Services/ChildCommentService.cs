@@ -23,7 +23,7 @@ namespace SocialMedia.Api.Services
             }
 
             var createdChildComment = await childCommentRepo.Create(childCommentToCreate.ToChildCommentModel());
-            var createdChildCommentDto = createdChildComment.ToGetChildCommentResponseDto();
+            var createdChildCommentDto = createdChildComment.ToChildCommentResponseDto();
 
             return createdChildCommentDto;
         }
@@ -31,7 +31,7 @@ namespace SocialMedia.Api.Services
         public async Task<List<ChildCommentResponseDto>> GetAll()
         {
             var childCommentsDb = await childCommentRepo.GetAll();
-            var childCommentsDto = childCommentsDb.Select(c => c.ToGetChildCommentResponseDto()).ToList();
+            var childCommentsDto = childCommentsDb.Select(c => c.ToChildCommentResponseDto()).ToList();
 
             return childCommentsDto;
         }
@@ -39,7 +39,7 @@ namespace SocialMedia.Api.Services
         public async Task<ChildCommentResponseDto?> GetById(int id)
         {
             var childCommentDb = await childCommentRepo.GetById(id);
-            var childCommentDto = childCommentDb?.ToGetChildCommentResponseDto();
+            var childCommentDto = childCommentDb?.ToChildCommentResponseDto();
 
             return childCommentDto;
         }
@@ -56,7 +56,7 @@ namespace SocialMedia.Api.Services
             childCommentDb.Content = childCommentToUpdate.Content;
 
             var updatedChildComment = await childCommentRepo.Update(childCommentDb);
-            var updatedChildCommentDto = updatedChildComment.ToGetChildCommentResponseDto();
+            var updatedChildCommentDto = updatedChildComment.ToChildCommentResponseDto();
 
             return updatedChildCommentDto;
         }
@@ -71,11 +71,11 @@ namespace SocialMedia.Api.Services
             }
 
             var deletedChildComment = await childCommentRepo.Delete(childCommentDb);
-            var deletedChildCommentDto = deletedChildComment.ToGetChildCommentResponseDto();
+            var deletedChildCommentDto = deletedChildComment.ToChildCommentResponseDto();
 
             return deletedChildCommentDto;
         }
 
-        public Task<List<PostResponseDto>> GetByUserId(string userId) => throw new NotImplementedException();
+        public Task<List<ChildCommentResponseDto>> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

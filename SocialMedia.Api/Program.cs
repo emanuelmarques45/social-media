@@ -55,7 +55,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddRazorPages();
-builder.Services.AddProblemDetails();
 
 builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
 {
@@ -117,11 +116,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
 app.UseCors();
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -135,8 +134,12 @@ if (app.Environment.IsDevelopment())
 {
     _ = app.UseSwagger();
     _ = app.UseSwaggerUI();
+    _ = app.UseStatusCodePages();
 
     // _ = app.MapControllers().AllowAnonymous();
+} else
+{
+    _ = app.UseExceptionHandler();
 }
 
 app.Run();

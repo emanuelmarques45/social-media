@@ -8,6 +8,6 @@ namespace SocialMedia.Shared.Dtos.Post
         public int Id { get; set; }
 
         [StringLength(280, MinimumLength = 1)]
-        public required string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
     }
 }
