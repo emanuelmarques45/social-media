@@ -14,7 +14,6 @@ namespace SocialMedia.Shared.Mappers
                 CreatedAt = post.CreatedAt,
                 User = post.User.ToGetRelatedUserResponseDto(),
                 Likes = post.Likes.Select(l => l.ToPostLikeResponseDto()).ToList(),
-                Comments = post.Comments.Select(c => c.ToCommentResponseDto()).ToList(),
                 CommentCount = post.Comments.Count,
                 LikeCount = post.Likes.Count,
             };

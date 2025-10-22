@@ -76,8 +76,15 @@ namespace SocialMedia.Api.Services
             return deletedPostDto;
         }
 
-        public async Task<List<PostResponseDto>> GetByUserId(string userId)
+        public async Task<List<PostResponseDto>?> GetByUserId(string userId)
         {
+            var userDb = await userManager.FindByIdAsync(userId);
+
+            if (userDb == null)
+            {
+                return null;
+            }
+
             var postsDb = await postRepo.GetByUserId(userId);
             var postsDto = postsDb.Select(p => p.ToPostResponseDto()).ToList();
 

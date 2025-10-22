@@ -183,14 +183,12 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/posts")]
         public async Task<IActionResult> GetPosts([FromRoute] string id)
         {
-            var userDb = await userManager.FindByIdAsync(id);
+            var posts = await postService.GetByUserId(id);
 
-            if (userDb == null)
+            if (posts == null)
             {
                 return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get posts"));
             }
-
-            var posts = await postService.GetByUserId(id);
 
             return Ok(ApiResultReturn.Ok(posts));
         }
@@ -198,16 +196,14 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetComments([FromRoute] string id)
         {
-            var userDb = await userManager.FindByIdAsync(id);
+            var commentsDb = await commentService.GetByUserId(id);
 
-            if (userDb == null)
+            if (commentsDb == null)
             {
                 return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get comments"));
             }
 
-            var comments = await commentService.GetByUserId(id);
-
-            return Ok(ApiResultReturn.Ok(comments));
+            return Ok(ApiResultReturn.Ok(commentsDb));
         }
 
         [HttpPost("upload-profile-picture")]

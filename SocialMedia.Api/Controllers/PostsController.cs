@@ -97,9 +97,14 @@ namespace SocialMedia.Api.Controllers
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetComments([FromRoute] int id)
         {
-            var comments = await commentService.GetByPostId(id);
+            var commentsDb = await commentService.GetByPostId(id);
 
-            return Ok(comments);
+            if (commentsDb == null)
+            {
+                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to get comments"));
+            }
+
+            return Ok(ApiResultReturn.Ok(commentsDb));
         }
     }
 }

@@ -76,16 +76,30 @@ namespace SocialMedia.Api.Services
             return deletedCommentDto;
         }
 
-        public async Task<List<UserCommentResponseDto>> GetByUserId(string userId)
+        public async Task<List<UserCommentResponseDto>?> GetByUserId(string userId)
         {
+            var userDb = await userManager.FindByIdAsync(userId);
+
+            if (userDb == null)
+            {
+                return null;
+            }
+
             var commentsDb = await commentRepo.GetByUserId(userId);
             var commentsDto = commentsDb.Select(c => c.ToUserCommentResponseDto()).ToList();
 
             return commentsDto;
         }
 
-        public async Task<List<CommentResponseDto>> GetByPostId(int postId)
+        public async Task<List<CommentResponseDto>?> GetByPostId(int postId)
         {
+            var postDb = await postRepo.GetById(postId);
+
+            if (postDb == null)
+            {
+                return null;
+            }
+
             var commentsDb = await commentRepo.GetByPostId(postId);
             var commentsDto = commentsDb.Select(c => c.ToCommentResponseDto()).ToList();
 

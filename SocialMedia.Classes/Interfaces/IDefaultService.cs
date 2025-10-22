@@ -12,6 +12,6 @@
 
         public Task<T?> Delete(int id);
 
-        public Task<List<T>> GetByUserId(string userId) => throw new NotImplementedException();
+        public Task<List<T>?> GetByUserId(string userId) => throw new NotImplementedException();
     }
 }

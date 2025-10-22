@@ -48,24 +48,24 @@ namespace SocialMedia.Api.Repository.Likes
             return likeType switch
             {
                 LikeableType.Post => await context.PostLike
-                    .AsNoTracking()
                     .Include(l => l.User)
                     .Include(l => l.Post)
                     .Select(l => l.ToPostLikeResponseDto())
+                    .AsNoTracking()
                     .ToListAsync(),
 
                 LikeableType.Comment => await context.CommentLike
-                    .AsNoTracking()
                     .Include(l => l.User)
                     .Include(l => l.Comment)
                     .Select(l => l.ToCommentLikeResponseDto())
+                    .AsNoTracking()
                     .ToListAsync(),
 
                 LikeableType.ChildComment => await context.ChildCommentLike
-                    .AsNoTracking()
                     .Include(l => l.User)
                     .Include(l => l.ChildComment)
                     .Select(l => l.ToChildCommentLikeResponseDto())
+                    .AsNoTracking()
                     .ToListAsync(),
 
                 _ => throw new ArgumentOutOfRangeException(nameof(likeType), "Unsupported likeable type")
