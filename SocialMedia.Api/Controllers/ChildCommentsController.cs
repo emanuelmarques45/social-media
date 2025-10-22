@@ -10,7 +10,7 @@ namespace SocialMedia.Api.Controllers
     // [Authorize]
     public class ChildCommentsController(IChildCommentService childCommentService) : ControllerBase
     {
-        private readonly string _childCommentNotFoundMsg = "The comment was not found!";
+        private string ChildCommentNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateChildCommentRequestDto childCommentToCreate)
@@ -43,20 +43,20 @@ namespace SocialMedia.Api.Controllers
 
             if (childComment == null)
             {
-                return NotFound(_childCommentNotFoundMsg);
+                return NotFound(ChildCommentNotFoundMsg);
             }
 
             return Ok(childComment);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateChildCommentRequestDto childCommentToUpdate)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateChildCommentRequestDto childCommentToUpdate)
         {
-            var updatedChildComment = await childCommentService.Update(childCommentToUpdate);
+            var updatedChildComment = await childCommentService.Update(id, childCommentToUpdate);
 
             if (updatedChildComment == null)
             {
-                return NotFound(_childCommentNotFoundMsg);
+                return NotFound(ChildCommentNotFoundMsg);
             }
 
             return Ok(updatedChildComment);
@@ -69,7 +69,7 @@ namespace SocialMedia.Api.Controllers
 
             if (deletedChildComment == null)
             {
-                return NotFound(_childCommentNotFoundMsg);
+                return NotFound(ChildCommentNotFoundMsg);
             }
 
             return NoContent();

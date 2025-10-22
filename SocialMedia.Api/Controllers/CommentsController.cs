@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.Comment;
+using SocialMedia.Shared.Helpers.ApiResult;
 using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
@@ -10,7 +11,7 @@ namespace SocialMedia.Api.Controllers
     [Authorize]
     public class CommentsController(ICommentService commentService) : ControllerBase
     {
-        private readonly string _commentNotFoundMsg = "The comment was not found!";
+        private string CommentNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)
@@ -43,20 +44,20 @@ namespace SocialMedia.Api.Controllers
 
             if (comment == null)
             {
-                return NotFound(_commentNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to get comment."));
             }
 
             return Ok(comment);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateCommentRequestDto commentToUpdate)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentToUpdate)
         {
-            var updatedComment = await commentService.Update(commentToUpdate);
+            var updatedComment = await commentService.Update(id, commentToUpdate);
 
             if (updatedComment == null)
             {
-                return NotFound(_commentNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to update comment."));
             }
 
             return Ok(updatedComment);
@@ -69,7 +70,7 @@ namespace SocialMedia.Api.Controllers
 
             if (deletedComment == null)
             {
-                return NotFound(_commentNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to delete comment"));
             }
 
             return NoContent();

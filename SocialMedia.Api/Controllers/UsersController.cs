@@ -22,6 +22,8 @@ namespace SocialMedia.Api.Controllers
         ICommentService commentService
         ) : ControllerBase
     {
+        private string UserNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
+
         [HttpPost("assign-role")]
 
         // [Authorize(Roles = "Admin")]
@@ -31,7 +33,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to assign role"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to assign role"));
             }
 
             var createdRole = await userManager.AddToRoleAsync(userDb, roleName);
@@ -111,7 +113,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get user"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get user"));
             }
 
             var userDto = userDb.ToGetUserResponseDto();
@@ -126,7 +128,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to update user"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to update user"));
             }
 
             if (!string.IsNullOrWhiteSpace(userToUpdate.Name))
@@ -165,7 +167,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to delete user"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to delete user"));
             }
 
             var deletedUser = await userManager.DeleteAsync(userDb);
@@ -185,7 +187,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get posts"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get posts"));
             }
 
             var posts = await postService.GetByUserId(id);
@@ -200,7 +202,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get comments"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get comments"));
             }
 
             var comments = await commentService.GetByUserId(id);
@@ -226,7 +228,7 @@ namespace SocialMedia.Api.Controllers
             var userDb = await userManager.FindByIdAsync(currentUser.Id);
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to upload profile picture"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to upload profile picture"));
             }
 
             using var ms = new MemoryStream();
@@ -246,7 +248,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null || userDb.ProfilePicture == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get profile picture"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get profile picture"));
             }
 
             return File(userDb.ProfilePicture, userDb.ProfilePictureContentType ?? "application/octet-stream");
@@ -259,7 +261,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get followers"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get followers"));
             }
 
             var followers = await userManager.Users.Where(u => u.Followings.Any(f => f.Id == id))
@@ -276,7 +278,7 @@ namespace SocialMedia.Api.Controllers
 
             if (userDb == null)
             {
-                return NotFound(ApiResultReturn.Fail(["User not found"], "Failed to get followings"));
+                return NotFound(ApiResultReturn.Fail([UserNotFoundMsg], "Failed to get followings"));
             }
 
             var followings = await userManager.Users.Where(u => u.Followers.Any(f => f.Id == id))

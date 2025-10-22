@@ -44,9 +44,9 @@ namespace SocialMedia.Api.Services
             return childCommentDto;
         }
 
-        public async Task<ChildCommentResponseDto?> Update(UpdateChildCommentRequestDto childCommentToUpdate)
+        public async Task<ChildCommentResponseDto?> Update(int id, UpdateChildCommentRequestDto childCommentToUpdate)
         {
-            var childCommentDb = await childCommentRepo.GetById(childCommentToUpdate.Id);
+            var childCommentDb = await childCommentRepo.GetById(id);
 
             if (childCommentDb == null)
             {

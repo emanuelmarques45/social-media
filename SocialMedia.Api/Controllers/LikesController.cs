@@ -10,7 +10,7 @@ namespace SocialMedia.Api.Controllers
     // [Authorize]
     public class LikesController(IPostLikeService postLike) : ControllerBase
     {
-        private readonly string _likeNotFoundMsg = "The like was not found!";
+        private string LikeNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
 
         [HttpPost("post")]
         public async Task<IActionResult> LikePost([FromBody] CreateLikeRequestDto likeToCreate)
@@ -43,7 +43,7 @@ namespace SocialMedia.Api.Controllers
 
             if (like == null)
             {
-                return NotFound(_likeNotFoundMsg);
+                return NotFound(LikeNotFoundMsg);
             }
 
             return Ok(like);

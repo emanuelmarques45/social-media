@@ -41,16 +41,19 @@ namespace SocialMedia.Api.Services
             return postDto;
         }
 
-        public async Task<PostResponseDto?> Update(UpdatePostRequestDto postToUpdate)
+        public async Task<PostResponseDto?> Update(int id, UpdatePostRequestDto postToUpdate)
         {
-            var postDb = await postRepo.GetById(postToUpdate.Id);
+            var postDb = await postRepo.GetById(id);
 
             if (postDb == null)
             {
                 return null;
             }
 
-            postDb.Content = postToUpdate.Content;
+            if (!string.IsNullOrWhiteSpace(postToUpdate.Content))
+            {
+                postDb.Content = postToUpdate.Content;
+            }
 
             var updatedPost = await postRepo.Update(postDb);
             var updatedPostDto = updatedPost.ToPostResponseDto();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.Post;
+using SocialMedia.Shared.Helpers.ApiResult;
 using SocialMedia.Shared.Helpers.Query;
 using SocialMedia.Shared.Interfaces;
 
@@ -11,7 +12,7 @@ namespace SocialMedia.Api.Controllers
     // [Authorize]
     public class PostsController(IPostService postService, ICommentService commentService) : ControllerBase
     {
-        private readonly string _postNotFoundMsg = "The post was not found!";
+        private string PostNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
@@ -61,20 +62,20 @@ namespace SocialMedia.Api.Controllers
 
             if (post == null)
             {
-                return NotFound(_postNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to get post."));
             }
 
             return Ok(post);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdatePostRequestDto postToUpdate)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePostRequestDto postToUpdate)
         {
-            var updatedPost = await postService.Update(postToUpdate);
+            var updatedPost = await postService.Update(id, postToUpdate);
 
             if (updatedPost == null)
             {
-                return NotFound(_postNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to update post."));
             }
 
             return Ok(updatedPost);
@@ -87,7 +88,7 @@ namespace SocialMedia.Api.Controllers
 
             if (deletedPost == null)
             {
-                return NotFound(_postNotFoundMsg);
+                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to delete post."));
             }
 
             return NoContent();

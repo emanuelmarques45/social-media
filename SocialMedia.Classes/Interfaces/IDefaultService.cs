@@ -8,7 +8,7 @@
 
         public Task<T?> GetById(int id);
 
-        public Task<T?> Update(TUpdate postToUpdate);
+        public Task<T?> Update(int id, TUpdate postToUpdate);
 
         public Task<T?> Delete(int id);
 
