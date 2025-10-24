@@ -48,5 +48,7 @@ namespace SocialMedia.Api.Repository.ChildComment
         }
 
         public Task<List<ChildCommentModel>> GetByUserId(string userId) => throw new NotImplementedException();
+
+        public async Task<List<ChildCommentModel>> GetByCommentId(int id) => await context.ChildComment.Include(c => c.User).Where(c => c.CommentId == id).AsNoTracking().ToListAsync();
     }
 }

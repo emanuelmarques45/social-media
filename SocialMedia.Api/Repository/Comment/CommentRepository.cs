@@ -50,6 +50,6 @@ namespace SocialMedia.Api.Repository.Comment
 
         public async Task<List<CommentModel>> GetByUserId(string userId) => await context.Comment.Where(p => p.UserId == userId).AsNoTracking().ToListAsync();
 
-        public async Task<List<CommentModel>> GetByPostId(int id) => await context.Comment.Include(c => c.User).Where(c => c.PostId == id).Include(c => c.User).AsNoTracking().ToListAsync();
+        public async Task<List<CommentModel>> GetByPostId(int id) => await context.Comment.Include(c => c.User).Where(c => c.PostId == id).AsNoTracking().ToListAsync();
     }
 }

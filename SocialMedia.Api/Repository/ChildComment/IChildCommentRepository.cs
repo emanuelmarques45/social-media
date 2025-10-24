@@ -4,5 +4,6 @@ namespace SocialMedia.Api.Repository.ChildComment
 {
     public interface IChildCommentRepository : IDefaultRepository<ChildCommentModel>
     {
+        public Task<List<ChildCommentModel>> GetByCommentId(int id);
     }
 }

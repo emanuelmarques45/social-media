@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialMedia.Shared.Dtos.Comment;
-using SocialMedia.Shared.Helpers.ApiResult;
 using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
@@ -9,23 +8,21 @@ namespace SocialMedia.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize]
-    public class CommentsController(ICommentService commentService) : ControllerBase
+    public class CommentsController(ICommentService commentService, IChildCommentService childCommentService) : ControllerBase
     {
-        private string CommentNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentRequestDto commentToCreate)
         {
             var createdComment = await commentService.Create(commentToCreate);
 
-            if (createdComment == null)
+            if (!createdComment.Success)
             {
-                return NotFound("User or Post not found!");
+                return NotFound(createdComment);
             }
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { createdComment.Id },
+                new { createdComment.Data?.Id },
                 createdComment);
         }
 
@@ -42,9 +39,9 @@ namespace SocialMedia.Api.Controllers
         {
             var comment = await commentService.GetById(id);
 
-            if (comment == null)
+            if (!comment.Success)
             {
-                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to get comment."));
+                return NotFound(comment);
             }
 
             return Ok(comment);
@@ -55,9 +52,9 @@ namespace SocialMedia.Api.Controllers
         {
             var updatedComment = await commentService.Update(id, commentToUpdate);
 
-            if (updatedComment == null)
+            if (!updatedComment.Success)
             {
-                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to update comment."));
+                return NotFound(updatedComment);
             }
 
             return Ok(updatedComment);
@@ -68,12 +65,25 @@ namespace SocialMedia.Api.Controllers
         {
             var deletedComment = await commentService.Delete(id);
 
-            if (deletedComment == null)
+            if (!deletedComment.Success)
             {
-                return NotFound(ApiResultReturn.Fail([CommentNotFoundMsg], "Failed to delete comment"));
+                return NotFound(deletedComment);
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/child-comments")]
+        public async Task<IActionResult> GetChildComments([FromRoute] int id)
+        {
+            var childComments = await childCommentService.GetByCommentId(id);
+
+            if (!childComments.Success)
+            {
+                return NotFound(childComments);
+            }
+
+            return Ok(childComments);
         }
     }
 }

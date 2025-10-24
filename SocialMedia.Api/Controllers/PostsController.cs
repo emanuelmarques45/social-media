@@ -12,47 +12,45 @@ namespace SocialMedia.Api.Controllers
     // [Authorize]
     public class PostsController(IPostService postService, ICommentService commentService) : ControllerBase
     {
-        private string PostNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
-
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreatePostRequestDto postToCreate)
         {
             var createdPost = await postService.Create(postToCreate);
 
-            if (createdPost == null)
+            if (!createdPost.Success)
             {
-                return NotFound("User not found!");
+                return NotFound(createdPost);
             }
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { createdPost.Id },
+                new { createdPost.Data?.Id },
                 createdPost);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PostQuery query)
         {
-            var posts = (await postService.GetAll()).AsQueryable();
+            var posts = (await postService.GetAll()).Data?.AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Content))
             {
-                posts = posts.Where(p => p.Content.Contains(query.Content));
+                posts = posts?.Where(p => p.Content.Contains(query.Content));
             }
 
             if (query.CreatedAtStart != null)
             {
-                posts = posts.Where(p => p.CreatedAt >= query.CreatedAtStart);
+                posts = posts?.Where(p => p.CreatedAt >= query.CreatedAtStart);
             }
 
             if (query.CreatedAtEnd != null)
             {
-                posts = posts.Where(p => p.CreatedAt <= query.CreatedAtEnd);
+                posts = posts?.Where(p => p.CreatedAt <= query.CreatedAtEnd);
             }
 
-            posts = posts.ApplySorting(query.SortBy, query.IsDescending).ApplyPagination(query);
+            posts = posts?.ApplySorting(query.SortBy, query.IsDescending).ApplyPagination(query);
 
-            return Ok(posts);
+            return Ok(ApiResultReturn.Ok(posts));
         }
 
         [HttpGet("{id}")]
@@ -60,9 +58,9 @@ namespace SocialMedia.Api.Controllers
         {
             var post = await postService.GetById(id);
 
-            if (post == null)
+            if (!post.Success)
             {
-                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to get post."));
+                return NotFound(post);
             }
 
             return Ok(post);
@@ -73,9 +71,9 @@ namespace SocialMedia.Api.Controllers
         {
             var updatedPost = await postService.Update(id, postToUpdate);
 
-            if (updatedPost == null)
+            if (!updatedPost.Success)
             {
-                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to update post."));
+                return NotFound(updatedPost);
             }
 
             return Ok(updatedPost);
@@ -86,9 +84,9 @@ namespace SocialMedia.Api.Controllers
         {
             var deletedPost = await postService.Delete(id);
 
-            if (deletedPost == null)
+            if (!deletedPost.Success)
             {
-                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to delete post."));
+                return NotFound(deletedPost);
             }
 
             return NoContent();
@@ -99,12 +97,12 @@ namespace SocialMedia.Api.Controllers
         {
             var commentsDb = await commentService.GetByPostId(id);
 
-            if (commentsDb == null)
+            if (!commentsDb.Success)
             {
-                return NotFound(ApiResultReturn.Fail([PostNotFoundMsg], "Failed to get comments"));
+                return NotFound(commentsDb);
             }
 
-            return Ok(ApiResultReturn.Ok(commentsDb));
+            return Ok(commentsDb);
         }
     }
 }

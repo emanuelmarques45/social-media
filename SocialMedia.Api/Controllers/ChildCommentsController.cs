@@ -4,27 +4,26 @@ using SocialMedia.Shared.Interfaces;
 
 namespace SocialMedia.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/child-comments")]
     [ApiController]
 
     // [Authorize]
     public class ChildCommentsController(IChildCommentService childCommentService) : ControllerBase
     {
-        private string ChildCommentNotFoundMsg => $"{GetType().Name.Replace("Controller", string.Empty)[..^1]} not found.";
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateChildCommentRequestDto childCommentToCreate)
         {
             var createdChildComment = await childCommentService.Create(childCommentToCreate);
 
-            if (createdChildComment == null)
+            if (!createdChildComment.Success)
             {
-                return NotFound("User or Post not found!");
+                return NotFound(createdChildComment);
             }
 
             return CreatedAtAction(
                 nameof(GetById),
-                new { createdChildComment.Id },
+                new { createdChildComment.Data?.Id },
                 createdChildComment);
         }
 
@@ -41,9 +40,9 @@ namespace SocialMedia.Api.Controllers
         {
             var childComment = await childCommentService.GetById(id);
 
-            if (childComment == null)
+            if (!childComment.Success)
             {
-                return NotFound(ChildCommentNotFoundMsg);
+                return NotFound(childComment);
             }
 
             return Ok(childComment);
@@ -54,9 +53,9 @@ namespace SocialMedia.Api.Controllers
         {
             var updatedChildComment = await childCommentService.Update(id, childCommentToUpdate);
 
-            if (updatedChildComment == null)
+            if (!updatedChildComment.Success)
             {
-                return NotFound(ChildCommentNotFoundMsg);
+                return NotFound(updatedChildComment);
             }
 
             return Ok(updatedChildComment);
@@ -67,9 +66,9 @@ namespace SocialMedia.Api.Controllers
         {
             var deletedChildComment = await childCommentService.Delete(id);
 
-            if (deletedChildComment == null)
+            if (!deletedChildComment.Success)
             {
-                return NotFound(ChildCommentNotFoundMsg);
+                return NotFound(deletedChildComment);
             }
 
             return NoContent();
